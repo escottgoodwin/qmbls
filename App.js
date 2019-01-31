@@ -14,14 +14,16 @@ import { AsyncStorage } from "react-native"
 
 import Welcome from './screens/Welcome';
 import SignIn from './screens/SignIn';
+import SignOut from './screens/SignOut';
+import NotAuthorized from './screens/NotAuthorized';
 import TeacherDashboard from './screens/TeacherDashboard';
 import StudentDashboard from './screens/StudentDashboard';
 import CourseDashboard from './screens/CourseDashboard';
 import TestDashboard from './screens/TestDashboard';
 import CreateQuestion from './screens/CreateQuestion';
 import EditQuestion from './screens/EditQuestion';
+import ReviewQuestion from './screens/ReviewQuestion';
 
-import SignOut from './screens/SignOut';
 import Loading from './components/Loading'
 
 const token1 = 'asdf'
@@ -79,6 +81,8 @@ const AppNavigator = createStackNavigator(
   {
     Welcome: Welcome,
     SignIn: SignIn,
+    SignOut: SignOut,
+    NotAuthorized: NotAuthorized,
     Loading:  Loading,
     TeacherDashboard: TeacherDashboard,
     StudentDashboard: StudentDashboard,
@@ -86,7 +90,7 @@ const AppNavigator = createStackNavigator(
     TestDashboard: TestDashboard,
     CreateQuestion: CreateQuestion,
     EditQuestion: EditQuestion,
-    SignOut: SignOut,
+    ReviewQuestion: ReviewQuestion,
   },
   {
     initialRouteName: "Welcome"

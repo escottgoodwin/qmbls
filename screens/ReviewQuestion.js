@@ -9,7 +9,7 @@ import QuestionChoices from '../components/QuestionChoices'
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 
-QUESTION_QUERY = gql`
+const QUESTION_QUERY = gql`
   query CreateReviewQuery($questionId:ID!){
     question(id:$questionId){
       id
@@ -33,8 +33,13 @@ QUESTION_QUERY = gql`
   }
 `
 
-SEND_QUESTION_MUTATION = gql`
-
+const SEND_QUESTION_MUTATION = gql`
+mutation SendQuestion($testId: ID!,$questionId:ID! ){
+  sendQuestion(testId:$testId,questionId:$questionId){
+    question
+    id
+  }
+}
 `
 
 export default class ReviewQuestion extends React.Component {
@@ -49,7 +54,7 @@ export default class ReviewQuestion extends React.Component {
 
     const newQuestionId = navigation.getParam('newQuestionId', 'NO-ID')
     const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
-
+    const testId = navigation.getParam('testId', 'NO-ID')
 
     return (
 
@@ -74,6 +79,10 @@ export default class ReviewQuestion extends React.Component {
 
             <Image key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
 
+            <Text style={styles.welcome}>
+              {questionToRender.question}
+            </Text>
+
             {
               questionToRender.choices.map(choice =>
                 <Text style={styles.welcome}>
@@ -91,6 +100,7 @@ export default class ReviewQuestion extends React.Component {
                  mutation={SEND_QUESTION_MUTATION}
                  variables={{
                    questionId: newQuestionId,
+                   testId: testId
                  }}
                  onCompleted={data => this._confirm(data)}
                >

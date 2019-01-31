@@ -116,7 +116,12 @@ export default class SignIn extends React.Component {
     setToken(token)
     setUser(userid)
 
-    this.props.navigation.navigate('StudentDashboard')
+    if (user.role === 'STUDENT') {
+      this.props.navigation.navigate('StudentDashboard')
+    } else {
+      authMsg = 'If you are a teacher or adminstrator, please login with your teacher app.'
+      this.props.navigation.navigate('NotAuthorized',{authMsg:authMsg})
+    }
   }
 }
 

@@ -6,6 +6,30 @@ import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 
 
+const ANSWERED_QUESTION_QUERY = gql`
+  query CreateReviewQuery($questionId:ID!){
+    question(id:$questionId){
+      id
+      question
+      choices {
+        choice
+        correct
+      }
+      panel{
+        link
+        id
+      }
+      test{
+        id
+        subject
+        course{
+          name
+        }
+      }
+    }
+  }
+`
+
 export default class QuestionsAnswered extends React.Component {
 
   static navigationOptions = {
@@ -27,26 +51,85 @@ export default class QuestionsAnswered extends React.Component {
 
   render() {
     return (
+      <ScrollView >
       <View style={styles.container}>
-          <Text style={styles.welcome}>
-            {this.state.coursename} - {this.state.test_number}
-          </Text>
+      <Query query={ANSWERED_QUESTION_QUERY} variables={{ questionId: questionId }}>
+            {({ loading, error, data }) => {
+              if (loading) return <Loading1 />
+              if (error) return <Text>{JSON.stringify(error)}</Text>
 
-          <Text style={styles.instructions}>Questions Answered: {this.state.answered_by.length} </Text>
-          <Text style={styles.instructions}>Correct: {this.state.answer_correct.length} </Text>
+              const questionToRender = data.question
 
-          <QAList
-          qa_list={this.state.answered_by}
-          navigation={this.props.navigation}
-          />
+          return (
+            <>
+            <Text style={styles.welcome}>
+            {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
+            </Text>
+
+            <Text style={styles.welcome}>
+            {questionToRender.test.subject} - {questionToRender.test.testNumber}
+            </Text>
+
+
+            {questionToRender.answerCorrect ?
+              <Text style={styles.welcome}>
+              You got it right!
+              </Text>
+              :
+              <Text style={styles.welcome}>
+              You got it wrong.
+              </Text>
+            }
+
+            <Image key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
+
+            <Text style={styles.welcome}>
+              {questionToRender.question}
+            </Text>
+
+            {
+              questionToRender.choices.map(choice =>
+                <Text style={styles.welcome}>
+                {choice.choice} - {choice.correct ? 'Correct' : '' }
+                </Text>
+              )
+            }
+            </>
+            )
+
+          }}
+          </Query>
+
+             <Mutation
+                 mutation={SEND_QUESTION_MUTATION}
+                 variables={{
+                   questionId: newQuestionId,
+                   testId: testId
+                 }}
+                 onCompleted={data => this._confirm(data)}
+               >
+                 {mutation => (
+                   <ButtonColor
+                   title="Review"
+                   backgroundcolor="#282828"
+                   onpress={mutation}
+                   />
+                 )}
+               </Mutation>
+
+           <ButtonColor
+           title="Edit"
+           backgroundcolor="#282828"
+           onpress={() => this.props.navigation.navigate('EditQuestion',{ questionId:questionId })}
+           />
 
           <ButtonColor
-          title="Dashboard"
-          backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("Dashboard")}
+          title="Cancel"
+          backgroundcolor="#282828"
+          onpress={() => this.props.navigation.navigate('StudentDashboard')}
           />
-
-      </View>
+          </View>
+      </ScrollView>
     );
   }
 }

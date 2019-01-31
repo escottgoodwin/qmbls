@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView,TextInput, Alert} from 'react-native';
+import { StyleSheet, Platform, Image, Text, View, ScrollView, TextInput, Alert} from 'react-native';
 import { Button } from 'react-native-elements'
-
 
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
@@ -37,20 +36,20 @@ query CreateQuestionQuery($questionId:ID!){
 
 const CREATE_QUESTION_MUTATION = gql`
 mutation CreateQuestion(
-  $question:String!,
+  $question: String!,
   $testId:ID!,
   $panelId:ID!,
-  $choice1:String,
-  $choiceCorrect1: Boolean,
-  $choice2:String,
-  $choiceCorrect2: Boolean,
-  $choice3:String,
-  $choiceCorrect3: Boolean,
-  $choice4:String,
-  $choiceCorrect4: Boolean,
+  $choice1:String!,
+  $choiceCorrect1: Boolean!,
+  $choice2:String!,
+  $choiceCorrect2: Boolean!,
+  $choice3:String!,
+  $choiceCorrect3: Boolean!,
+  $choice4:String!,
+  $choiceCorrect4: Boolean!,
   ){
     createQuestion(
-      question:$question,
+      question: $question,
       testId:$testId,
       panelId:$panelId,
       choice1: $choice1,
@@ -63,6 +62,9 @@ mutation CreateQuestion(
       choiceCorrect4: $choiceCorrect4,
     ){
         id
+        test{
+          id
+        }
       }
     }
   `
@@ -81,11 +83,11 @@ export default class CreateQuestion extends React.Component {
     choice1:'',
     choiceCorrect1:false,
     choice2:'',
-    choiceCorrect1:false,
+    choiceCorrect2:false,
     choice3:'',
-    choiceCorrect1:false,
+    choiceCorrect3:false,
     choice4:'',
-    choiceCorrect1:false,
+    choiceCorrect4:false,
   };
 
   render(){
@@ -122,6 +124,10 @@ export default class CreateQuestion extends React.Component {
 
             <Text style={styles.welcome}>
             {questionToRender.test.subject} - {questionToRender.test.testNumber}
+            </Text>
+
+            <Text style={styles.welcome}>
+            {this.state.question}
             </Text>
 
             <Image key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
@@ -200,7 +206,6 @@ export default class CreateQuestion extends React.Component {
              onpress={() => this.props.navigation.navigate('StudentDashboard')}
              />
              </>
-
            )
          }}
          </Query>
@@ -209,8 +214,10 @@ export default class CreateQuestion extends React.Component {
   }
 
   _confirm = (data) => {
-    const { id } = data.createQuestion
-    this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId })
+    const { id, test } = data.createQuestion
+    const { navigation } = this.props;
+    const questionId = navigation.getParam('questionId', 'NO-ID')
+    this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId, testId: test.id })
     }
 
 }

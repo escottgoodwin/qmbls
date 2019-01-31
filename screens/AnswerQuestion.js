@@ -1,9 +1,57 @@
 import React from 'react';
 import { StyleSheet, Platform,Image, Text, View, ScrollView,TextInput,Alert,FlatList,TouchableOpacity,Dimensions} from 'react-native';
 import { Button,Card } from 'react-native-elements'
+import RadioGroup from 'react-native-radio-buttons-group';
 
 import ButtonColor from '../components/ButtonColor'
-import Answer from '../components/Answer'
+import AnswerChoice from '../components/AnswerChoice'
+
+const ANSWER_QUESTION_QUERY = gql`
+  query CreateReviewQuery($questionId:ID!){
+    question(id:$questionId){
+      id
+      question
+      choices {
+        choice
+        correct
+      }
+      panel{
+        link
+        id
+      }
+      test{
+        id
+        subject
+        course{
+          name
+        }
+      }
+    }
+  }
+`
+const ANSWER_QUESTION_MUTATION = gql`
+  mutation AnswerQuestionMutation(
+    $questionId:ID!,
+  	$answerChoiceId:ID!){
+    addAnswer(
+      questionId:$questionId,
+      answerChoiceId:$answerChoiceId
+    ){
+      answer{
+        choice
+      }
+      answerCorrect
+      question{
+        question
+        choices{
+          id
+          choice
+          correct
+        }
+      }
+    }
+  }
+`
 
 export default class AnswerQuestion extends React.Component {
 
@@ -11,93 +59,89 @@ export default class AnswerQuestion extends React.Component {
     title: 'Answer Question',
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      uid: '',
-      qid:'',
-      name:'',
-      class_id:'',
-      class_name:'',
-      question:'',
-      pageurl:'http://1t8r984d8wic2jedckksuin1.wpengine.netdna-cdn.com/wp-content/uploads/2014/09/loading.gif',
-      choices:[],
-      correct:'',
-      response:'',
-      selected:'',
-      color:'',
-      answered:false,
-      disabled:false,
-      dispute:false
-    };
-  }
+  state = {
+          checkboxes: [],
+      };
 
-  answerSample = () =>
-    console.log('pressed')
-
+  onPress = data => this.setState({ checkboxes });
 
   render() {
-    var selectiontext = "Your Selection: " + this.state.selected;
-    var disabled = this.state.disabled
-    const qid=this.state.qid
+    const { navigation } = this.props;
+
+    const questionId = navigation.getParam('questionId', 'NO-ID')
+
+    let selectedButton = this.state.data.find(e => e.selected == true);
+
+    selectedButton = selectedButton ? selectedButton.value : this.state.checkboxes[0].label;
+
     return (
-      <ScrollView contentContainerStyle={styles.container}>
 
-        <Text style={styles.header}>
-        {this.state.class_name}
-        </Text>
+      <ScrollView >
+      <View style={styles.container}>
+      <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId, answerChoiceId: answerChoiceId }}>
+            {({ loading, error, data }) => {
+              if (loading) return <Loading1 />
+              if (error) return <Text>{JSON.stringify(error)}</Text>
 
-          <Card title={selectiontext} containerStyle={styles.card} >
+              const questionToRender = data.question
+              const checkboxes = questionToRender.choices.map(choice =>
+               {
+                 label: choice.choice,
+                 value: choice.id,
+                })
 
-          <Text style={styles.question}>
-          {this.state.question}
-          </Text>
+              this.setState({checkboxes})
 
-          <FlatList
-          data={this.state.choices}
-          renderItem={
-            ({ item, index }) => (
-              <TouchableOpacity disabled={disabled}
-              onPress={() => this.setState({selected:item.value})}>
-               <Text style={styles.choice} >{item.value} {item.text} </Text>
-              </TouchableOpacity>
+          return (
+            <>
+            <Text style={styles.welcome}>
+            {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
+            </Text>
+
+            <Text style={styles.welcome}>
+            {questionToRender.test.subject} - {questionToRender.test.testNumber}
+            </Text>
+
+            <Text style={styles.welcome}>
+              {questionToRender.question}
+            </Text>
+
+             <RadioGroup radioButtons={this.state.checkboxes} onPress={this.onPress} />
+            </>
             )
-          }
-          keyExtractor={item => item.text}
-        />
-          </Card>
 
-          <View style={styles.answer}>
+          }}
+          </Query>
 
-          {this.state.answered ?
-            <View>
-            <Answer
-            response={this.state.response}
-            color={this.state.color}
-            correct={this.state.correct} />
+             <Mutation
+                 mutation={ANSWER_QUESTION_MUTATION}
+                 variables={{
+                   questionId: questionId,
+                   answerChoiceIds: this.state.checkboxes.map(choice => choice.choiceId)
+                 }}
+                 onCompleted={data => this._confirm(data)}
+               >
+                 {mutation => (
+                   <ButtonColor
+                   title="Review"
+                   backgroundcolor="#282828"
+                   onpress={mutation}
+                   />
+                 )}
+               </Mutation>
 
-            <ButtonColor
-            title="Get Answer"
-            backgroundcolor="#900000"
-            onpress={() => this.props.navigation.navigate('GetAnswer',{qid: qid,})}
-            />
-            </View>
-            :
-            <ButtonColor
-            title="Submit Answer"
-            backgroundcolor="#003366"
-            onpress={this.answerSample}
-            />
-          }
-
-          </View>
+           <ButtonColor
+           title="Edit"
+           backgroundcolor="#282828"
+           onpress={() => this.props.navigation.navigate('EditQuestion',{ questionId:questionId })}
+           />
 
           <ButtonColor
-          title="Dashboard"
+          title="Cancel"
           backgroundcolor="#282828"
-          onpress={() => this.props.navigation.navigate('Dashboard')}
+          onpress={() => this.props.navigation.navigate('StudentDashboard')}
           />
-
+          </View>
       </ScrollView>
     );
   }
