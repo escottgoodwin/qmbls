@@ -23,6 +23,7 @@ import TestDashboard from './screens/TestDashboard';
 import CreateQuestion from './screens/CreateQuestion';
 import EditQuestion from './screens/EditQuestion';
 import ReviewQuestion from './screens/ReviewQuestion';
+import AnswerQuestion from './screens/AnswerQuestion';
 
 import Loading from './components/Loading'
 
@@ -91,6 +92,7 @@ const AppNavigator = createStackNavigator(
     CreateQuestion: CreateQuestion,
     EditQuestion: EditQuestion,
     ReviewQuestion: ReviewQuestion,
+    AnswerQuestion: AnswerQuestion
   },
   {
     initialRouteName: "Welcome"

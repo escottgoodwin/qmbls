@@ -75,7 +75,7 @@ export default class TestDashboard extends React.Component {
           <ButtonColor
           title="Create Question"
           backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("CreateQuestion",{questionId: 'cjr5jz12q00110845qsza03gi'})}
+          onpress={() => this.props.navigation.navigate("CreateQuestion",{questionId: 'cjrn3p73e00760865h8m0brxg'})}
           />
 
           <ButtonColor

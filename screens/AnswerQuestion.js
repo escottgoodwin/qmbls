@@ -1,29 +1,34 @@
 import React from 'react';
 import { StyleSheet, Platform,Image, Text, View, ScrollView,TextInput,Alert,FlatList,TouchableOpacity,Dimensions} from 'react-native';
 import { Button,Card } from 'react-native-elements'
-import RadioGroup from 'react-native-radio-buttons-group';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+
+import { Query, Mutation } from "react-apollo";
+import gql from "graphql-tag";
 
 import ButtonColor from '../components/ButtonColor'
-import AnswerChoice from '../components/AnswerChoice'
+import Loading1 from '../components/Loading1'
+
 
 const ANSWER_QUESTION_QUERY = gql`
-  query CreateReviewQuery($questionId:ID!){
+  query AnswerQuestionQuery($questionId:ID!){
     question(id:$questionId){
       id
       question
       choices {
+        id
         choice
         correct
-      }
-      panel{
-        link
-        id
       }
       test{
         id
         subject
+        testNumber
         course{
           name
+          institution{
+            name
+          }
         }
       }
     }
@@ -59,38 +64,38 @@ export default class AnswerQuestion extends React.Component {
     title: 'Answer Question',
   };
 
+
   state = {
-          checkboxes: [],
+          answerChoiceId: '',
+          chosenLabel:''
       };
 
-  onPress = data => this.setState({ checkboxes });
+_onSelect = ( item ) => {
+  this.setState({
+    answerChoiceId:item.value,
+    chosenLabel:item.label
+  })
+};
+
 
   render() {
     const { navigation } = this.props;
 
     const questionId = navigation.getParam('questionId', 'NO-ID')
 
-    let selectedButton = this.state.data.find(e => e.selected == true);
-
-    selectedButton = selectedButton ? selectedButton.value : this.state.checkboxes[0].label;
 
     return (
 
       <ScrollView >
       <View style={styles.container}>
-      <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId, answerChoiceId: answerChoiceId }}>
+      <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
               if (error) return <Text>{JSON.stringify(error)}</Text>
 
               const questionToRender = data.question
-              const checkboxes = questionToRender.choices.map(choice =>
-               {
-                 label: choice.choice,
-                 value: choice.id,
-                })
+              const checkboxes = questionToRender.choices.map(choice => ({'value':choice.id, 'label':choice.choice}))
 
-              this.setState({checkboxes})
 
           return (
             <>
@@ -102,11 +107,19 @@ export default class AnswerQuestion extends React.Component {
             {questionToRender.test.subject} - {questionToRender.test.testNumber}
             </Text>
 
-            <Text style={styles.welcome}>
+            <View style={styles.question}>
+            <Text >
               {questionToRender.question}
             </Text>
+            </View>
 
-             <RadioGroup radioButtons={this.state.checkboxes} onPress={this.onPress} />
+            <View style={styles.choice}>
+            <RadioForm
+              radio_props={checkboxes}
+              initial={0}
+              onPress={(value) => {this.setState({answerChoiceId:value})}}
+            />
+            </View>
             </>
             )
 
@@ -117,30 +130,19 @@ export default class AnswerQuestion extends React.Component {
                  mutation={ANSWER_QUESTION_MUTATION}
                  variables={{
                    questionId: questionId,
-                   answerChoiceIds: this.state.checkboxes.map(choice => choice.choiceId)
+                   answerChoiceId: this.state.answerChoiceId
                  }}
                  onCompleted={data => this._confirm(data)}
                >
                  {mutation => (
                    <ButtonColor
-                   title="Review"
+                   title="Submit Answer"
                    backgroundcolor="#282828"
                    onpress={mutation}
                    />
                  )}
                </Mutation>
 
-           <ButtonColor
-           title="Edit"
-           backgroundcolor="#282828"
-           onpress={() => this.props.navigation.navigate('EditQuestion',{ questionId:questionId })}
-           />
-
-          <ButtonColor
-          title="Cancel"
-          backgroundcolor="#282828"
-          onpress={() => this.props.navigation.navigate('StudentDashboard')}
-          />
           </View>
       </ScrollView>
     );
@@ -150,25 +152,31 @@ export default class AnswerQuestion extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
+    height: Dimensions.get('window').height
   },
   card:{
     height: 320,
     width: Dimensions.get('window').width * .8
   },
   choice:{
-    width: 250,
+    width: 300,
     fontSize:18,
     margin:10,
-    color:'#282828'
+    padding:10,
+    color:'#282828',
+    backgroundColor:'white'
   },
   question:{
-    width: 250,
+    width: 300,
     fontWeight:'bold',
     fontSize:18,
-    color:'#282828'
+    padding:10,
+    color:'#282828',
+    backgroundColor:'white'
   },
   answer:{
   justifyContent: 'center',

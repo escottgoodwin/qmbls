@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
-import { Button } from 'react-native-elements'
+import { StyleSheet, Platform, Image, Text, Dimensions, View, ScrollView,TextInput,Alert} from 'react-native';
+import { Button, Icon, Divider } from 'react-native-elements'
 
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import QuestionChoices from '../components/QuestionChoices'
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
+import Loading1 from '../components/Loading1'
 
 const QUESTION_QUERY = gql`
   query CreateReviewQuery($questionId:ID!){
@@ -15,6 +16,7 @@ const QUESTION_QUERY = gql`
       id
       question
       choices {
+        id
         choice
         correct
       }
@@ -27,6 +29,9 @@ const QUESTION_QUERY = gql`
         subject
         course{
           name
+          institution{
+            name
+          }
         }
       }
     }
@@ -34,13 +39,13 @@ const QUESTION_QUERY = gql`
 `
 
 const SEND_QUESTION_MUTATION = gql`
-mutation SendQuestion($testId: ID!,$questionId:ID! ){
-  sendQuestion(testId:$testId,questionId:$questionId){
-    question
-    id
+  mutation SendQuestion($testId: ID!, $questionId:ID! ){
+    sendQuestion(testId:$testId, questionId:$questionId){
+      question
+      id
+    }
   }
-}
-`
+  `
 
 export default class ReviewQuestion extends React.Component {
 
@@ -60,39 +65,60 @@ export default class ReviewQuestion extends React.Component {
 
       <ScrollView >
       <View style={styles.container}>
-      <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId }}>
+      <Query query={QUESTION_QUERY} variables={{ questionId: newQuestionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Text>Error...</Text>
 
               const questionToRender = data.question
 
           return (
             <>
-            <Text style={styles.welcome}>
+            <Text key={questionToRender.test.course.name} style={styles.welcome}>
             {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
             </Text>
 
-            <Text style={styles.welcome}>
+            <Text key={questionToRender.test.subject} style={styles.welcome}>
             {questionToRender.test.subject} - {questionToRender.test.testNumber}
             </Text>
 
-            <Image key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
+            <Image key={questionToRender.panel.link} source={{uri: questionToRender.panel.link }} style={styles.logo} />
 
-            <Text style={styles.welcome}>
-              {questionToRender.question}
-            </Text>
+            <View key={questionToRender.test.testNumber} style={styles.question}>
+              <Text key={questionToRender.question} >
+                {questionToRender.question}
+              </Text>
+            </View>
 
             {
               questionToRender.choices.map(choice =>
-                <Text style={styles.welcome}>
-                {choice.choice} - {choice.correct ? 'Correct' : '' }
+              <>
+                <View key={choice.id} style={styles.choice}>
+                {choice.correct ?
+                  <Icon key={choice.id+'aaa'}
+                    name='check-square'
+                    type='font-awesome'
+                    color='#4AC948'
+                     />
+                     :
+                     <Icon key={choice.id+'eee'}
+                       name='times-circle'
+                       type='font-awesome'
+                       color='#ff0000'
+                        />
+                }
+
+                <Text key={choice.id+'zzz'} style={{padding:10}} >
+                  {choice.choice}
                 </Text>
+
+                </View>
+                <Divider key={choice.id+'bbbb'}/>
+                </>
               )
             }
             </>
-            )
-
+          )
           }}
           </Query>
 
@@ -106,7 +132,7 @@ export default class ReviewQuestion extends React.Component {
                >
                  {mutation => (
                    <ButtonColor
-                   title="Review"
+                   title="Send Question"
                    backgroundcolor="#282828"
                    onpress={mutation}
                    />
@@ -116,20 +142,18 @@ export default class ReviewQuestion extends React.Component {
            <ButtonColor
            title="Edit"
            backgroundcolor="#282828"
-           onpress={() => this.props.navigation.navigate('EditQuestion',{ questionId:questionId })}
+           onpress={() => this.props.navigation.navigate('EditQuestion',{ questionId: newQuestionId })}
            />
 
-          <ButtonColor
-          title="Cancel"
-          backgroundcolor="#282828"
-          onpress={() => this.props.navigation.navigate('StudentDashboard')}
-          />
           </View>
       </ScrollView>
     );
   }
   _confirm = (data) => {
-    const { id } = data.addQuestion
+    const { id,question } = data.sendQuestion
+    const { navigation } = this.props;
+    const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
+
     this.props.navigation.navigate('AnswerQuestion',{ questionId: oldQuestionId })
     }
 }
@@ -140,6 +164,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
+  },
+  choice:{
+    flexDirection:"row",
+    minHeight: 50,
+    alignItems: 'center',
+    backgroundColor:'white',
+    width: 300,
+    padding:10
+  },
+  question:{
+    minHeight: 50,
+    alignItems: 'center',
+    backgroundColor:'white',
+    width: 300,
+    padding:10
   },
   logo: {
     height: 220,

@@ -6672,6 +6672,13 @@ react-native-radio-buttons-group@^1.0.7:
   resolved "https://registry.yarnpkg.com/react-native-radio-buttons-group/-/react-native-radio-buttons-group-1.0.7.tgz#176acaaa72e8e0d81baaf96abecd478ee8982b71"
   integrity sha512-ddBQsmKUNrLli+v/MDkEcYZyRCrKhU+OqzveMPve6ix0D0O7YbwdxSmKJ3NHUItlN/oBOwbi0rFMmOwETdJgqQ==
 
+react-native-radio-form@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-radio-form/-/react-native-radio-form-1.1.0.tgz#0806574b7f05a26a05261afbbd5df74ab0598c2b"
+  integrity sha512-tlxinLdnT17gMeG31cecROfq0zgTaDkjKr9rxn1QJoqtir7wbxFKIitKK8/uRTqi0oARDJAWd7gdI0qy+Djkag==
+  dependencies:
+    prop-types "^15.6.0"
+
 react-native-reanimated@1.0.0-alpha.10:
   version "1.0.0-alpha.10"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.0.0-alpha.10.tgz#e9e6fb35a2cf52fdc912b9fbc76f34f80698e530"
@@ -6700,6 +6707,11 @@ react-native-screens@1.0.0-alpha.15:
   version "1.0.0-alpha.22"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-1.0.0-alpha.22.tgz#7a120377b52aa9bbb94d0b8541a014026be9289b"
   integrity sha512-kSyAt0AeVU6N7ZonfV6dP6iZF8B7Bce+tk3eujXhzBGsLg0VSLnU7uE9VqJF0xdQrHR91ZjGgVMieo/8df9KTA==
+
+react-native-simple-radio-button@^2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/react-native-simple-radio-button/-/react-native-simple-radio-button-2.7.3.tgz#c7227c0f963d6bbcfa245255d18a5a8b98fde41f"
+  integrity sha512-kiYRarFj7PXzV9fbQwMBiYwS4YnhrR4NZGT68atlFIoNFxZLrt5OMCDqXZqu6R6bUWKLndzPpO/nhXc6/OU1Mg==
 
 react-native-svg-animated-linear-gradient@^0.1.9:
   version "0.1.9"
