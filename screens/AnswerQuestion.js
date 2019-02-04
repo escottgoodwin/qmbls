@@ -42,18 +42,7 @@ const ANSWER_QUESTION_MUTATION = gql`
       questionId:$questionId,
       answerChoiceId:$answerChoiceId
     ){
-      answer{
-        choice
-      }
-      answerCorrect
-      question{
-        question
-        choices{
-          id
-          choice
-          correct
-        }
-      }
+      id
     }
   }
 `
@@ -82,7 +71,6 @@ _onSelect = ( item ) => {
     const { navigation } = this.props;
 
     const questionId = navigation.getParam('questionId', 'NO-ID')
-
 
     return (
 
@@ -147,6 +135,11 @@ _onSelect = ( item ) => {
       </ScrollView>
     );
   }
+  _confirm = (data) => {
+    const { id } = data.addAnswer
+    this.props.navigation.navigate('QuestionAnswered',{ answerId: id })
+    }
+
 }
 
 const styles = StyleSheet.create({

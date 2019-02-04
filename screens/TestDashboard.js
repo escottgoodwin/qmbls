@@ -71,19 +71,14 @@ export default class TestDashboard extends React.Component {
           <Text style={styles.instructions}>Correct: </Text>
           </Card >
           </TouchableOpacity>
-
-          <ButtonColor
-          title="Create Question"
-          backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("CreateQuestion",{questionId: 'cjrn3p73e00760865h8m0brxg'})}
-          />
-
-          <ButtonColor
-          title="All Questions"
-          backgroundcolor="#1abc9c"
-          onpress={() => this.props.navigation.navigate('AllQuestions',{test_id:testToRender.id})}
-          />
-
+  
+          {testToRender.release &&
+            <ButtonColor
+            title="All Questions"
+            backgroundcolor="#1abc9c"
+            onpress={() => this.props.navigation.navigate('AllQuestions',{test_id:testToRender.id})}
+            />
+          }
 
           <ButtonColor
           title="Dashboard"

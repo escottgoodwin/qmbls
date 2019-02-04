@@ -6,6 +6,8 @@ import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import QuestionChoices from '../components/QuestionChoices'
+import ReviewChoice from '../components/ReviewChoice'
+
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 import Loading1 from '../components/Loading1'
@@ -92,29 +94,7 @@ export default class ReviewQuestion extends React.Component {
 
             {
               questionToRender.choices.map(choice =>
-              <>
-                <View key={choice.id} style={styles.choice}>
-                {choice.correct ?
-                  <Icon key={choice.id+'aaa'}
-                    name='check-square'
-                    type='font-awesome'
-                    color='#4AC948'
-                     />
-                     :
-                     <Icon key={choice.id+'eee'}
-                       name='times-circle'
-                       type='font-awesome'
-                       color='#ff0000'
-                        />
-                }
-
-                <Text key={choice.id+'zzz'} style={{padding:10}} >
-                  {choice.choice}
-                </Text>
-
-                </View>
-                <Divider key={choice.id+'bbbb'}/>
-                </>
+              <ReviewChoice key={choice.id} {...choice} />
               )
             }
             </>

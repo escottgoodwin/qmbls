@@ -77,6 +77,13 @@ export default class CourseDashboard extends React.Component {
           backgroundcolor="#003366"
           onpress={() => this.props.navigation.navigate('StudentDashboard')}
           />
+
+          <ButtonColor
+          title="Create Question"
+          backgroundcolor="#003366"
+          onpress={() => this.props.navigation.navigate("CreateQuestion",{questionId: 'cjrn3p73e00760865h8m0brxg'})}
+          />
+          
           </>
               )
             }}
