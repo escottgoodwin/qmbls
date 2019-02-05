@@ -34,6 +34,7 @@ const ANSWER_QUESTION_QUERY = gql`
     }
   }
 `
+
 const ANSWER_QUESTION_MUTATION = gql`
   mutation AnswerQuestionMutation(
     $questionId:ID!,

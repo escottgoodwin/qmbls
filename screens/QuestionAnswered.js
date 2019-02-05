@@ -131,7 +131,7 @@ export default class QuestionAnswered extends React.Component {
            />
 
           <ButtonColor
-          title="Dashboard"
+          title="Test Dashboard"
           backgroundcolor="#282828"
           onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:answerToRender.question.test.id })}
           />

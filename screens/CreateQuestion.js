@@ -72,7 +72,7 @@ mutation CreateQuestion(
 export default class CreateQuestion extends React.Component {
 
   static navigationOptions = {
-    title: 'Create Question1',
+    title: 'Create Question',
   };
 
   state = {
@@ -91,9 +91,9 @@ export default class CreateQuestion extends React.Component {
   };
 
   render(){
-    const { navigation } = this.props;
+    const { navigation } = this.props
 
-    const questionId = navigation.getParam('questionId', 'NO-ID')
+    const questionId = 'cjrr295lj00380859es8ey4eh'
 
     const {
     question,
@@ -216,7 +216,7 @@ export default class CreateQuestion extends React.Component {
   _confirm = (data) => {
     const { id, test } = data.createQuestion
     const { navigation } = this.props;
-    const questionId = navigation.getParam('questionId', 'NO-ID')
+    const questionId = 'cjrr295lj00380859es8ey4eh'
     this.props.navigation.navigate('ReviewQuestion',{ newQuestionId: id, oldQuestionId: questionId, testId: test.id })
     }
 
