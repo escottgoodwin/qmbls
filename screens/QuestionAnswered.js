@@ -112,7 +112,7 @@ export default class QuestionAnswered extends React.Component {
               </>
             }
 
-            <Text style={styles.welcome}>
+            <Text style={styles.question}>
               {answerToRender.question.question}
             </Text>
 
@@ -159,14 +159,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor:'white',
     width: 300,
-    padding:10
+    padding:10,
+    margin:10
   },
   question:{
     minHeight: 50,
     alignItems: 'center',
     backgroundColor:'white',
     width: 300,
-    padding:10
+    padding:10,
+    margin:10
   },
   logo: {
     height: 120,
