@@ -95,6 +95,7 @@ export default class SignIn extends React.Component {
           mutation={LOGIN_MUTATION}
           variables={{ email:email, password:password }}
           onCompleted={data => this._confirm(data)}
+          onError={error => this._error (error)}
         >
           {mutation => (
             <ButtonColor
@@ -107,6 +108,10 @@ export default class SignIn extends React.Component {
 
       </KeyboardAvoidingView>
     );
+  }
+
+  _error = async error => {
+      this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
   }
 
   _confirm = async data => {

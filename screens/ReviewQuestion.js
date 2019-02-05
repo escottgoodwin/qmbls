@@ -11,6 +11,8 @@ import ReviewChoice from '../components/ReviewChoice'
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
+
 
 const QUESTION_QUERY = gql`
   query CreateReviewQuery($questionId:ID!){
@@ -70,7 +72,7 @@ export default class ReviewQuestion extends React.Component {
       <Query query={QUESTION_QUERY} variables={{ questionId: newQuestionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>Error...</Text>
+              if (error) return <Error {...error} />
 
               const questionToRender = data.question
 

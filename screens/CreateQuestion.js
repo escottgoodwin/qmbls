@@ -190,6 +190,7 @@ export default class CreateQuestion extends React.Component {
                    choiceCorrect4: choiceCorrect4,
                  }}
                  onCompleted={data => this._confirm(data)}
+                 onError={error => this._error (error)}
                >
                  {mutation => (
                    <ButtonColor
@@ -212,6 +213,13 @@ export default class CreateQuestion extends React.Component {
       </ScrollView>
     )
   }
+
+  _error = async error => {
+    const { navigation } = this.props;
+    const questionId = 'cjrr295lj00380859es8ey4eh'
+    this.props.navigation.navigate('CreateQuestionError',{error: JSON.stringify(error),questionId:questionId})
+  }
+
 
   _confirm = (data) => {
     const { id, test } = data.createQuestion

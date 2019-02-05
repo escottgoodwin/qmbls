@@ -24,10 +24,13 @@ import CreateQuestion from './screens/CreateQuestion';
 import EditQuestion from './screens/EditQuestion';
 import ReviewQuestion from './screens/ReviewQuestion';
 import AnswerQuestion from './screens/AnswerQuestion';
-import QuestionAnswered from './screens/QuestionAnswered';
+import QuestionAnswered from './screens/QuestionAnswered'
 
 
 import Loading from './components/Loading'
+import Error from './screens/Error'
+import CreateQuestionError from './screens/CreateQuestionError'
+
 
 const token1 = 'asdf'
 const getToken = async () => {
@@ -95,7 +98,9 @@ const AppNavigator = createStackNavigator(
     EditQuestion: EditQuestion,
     ReviewQuestion: ReviewQuestion,
     AnswerQuestion: AnswerQuestion,
-    QuestionAnswered: QuestionAnswered
+    QuestionAnswered: QuestionAnswered,
+    Error:Error,
+    CreateQuestionError:CreateQuestionError 
   },
   {
     initialRouteName: "Welcome"
