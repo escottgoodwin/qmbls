@@ -57,13 +57,15 @@ export default class AnswerQuestion extends React.Component {
 
   state = {
           answerChoiceId: '',
-          chosenLabel:''
+          chosenLabel:'',
+          isVisible: false,
+          errorMessage:''
       };
 
 _onSelect = ( item ) => {
   this.setState({
     answerChoiceId:item.value,
-    chosenLabel:item.label
+    chosenLabel:item.label,
   })
 };
 
@@ -72,6 +74,8 @@ _onSelect = ( item ) => {
     const { navigation } = this.props;
 
     const questionId = navigation.getParam('questionId', 'NO-ID')
+
+    const {isVisible, errorMessage} = this.state
 
     return (
 
@@ -115,6 +119,15 @@ _onSelect = ( item ) => {
           }}
           </Query>
 
+          <View>
+          {isVisible &&
+            <>
+            <Text style={styles.messages}>Something is wrong!</Text>
+            <Text style={styles.messages}>{errorMessage}</Text>
+            </>
+          }
+          </View>
+
              <Mutation
                  mutation={ANSWER_QUESTION_MUTATION}
                  variables={{
@@ -122,6 +135,7 @@ _onSelect = ( item ) => {
                    answerChoiceId: this.state.answerChoiceId
                  }}
                  onCompleted={data => this._confirm(data)}
+                 onError={error => this._error (error)}
                >
                  {mutation => (
                    <ButtonColor
@@ -136,6 +150,15 @@ _onSelect = ( item ) => {
       </ScrollView>
     );
   }
+
+  _error = async error => {
+      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+
+      this.setState({ isVisible: true, errorMessage})
+  }
+
   _confirm = (data) => {
     const { id } = data.addAnswer
     this.props.navigation.navigate('QuestionAnswered',{ answerId: id })
@@ -172,12 +195,18 @@ const styles = StyleSheet.create({
     color:'#282828',
     backgroundColor:'white'
   },
-  answer:{
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: 300,
-  height:175,
+  messages: {
+    padding:5,
+    fontSize:16,
+    textAlign:'center',
+    color:'red'
   },
+  answer:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 300,
+    height:175,
+    },
   header:{
     width: 300,
     fontSize:18,

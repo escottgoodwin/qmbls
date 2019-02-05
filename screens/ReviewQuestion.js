@@ -57,9 +57,16 @@ export default class ReviewQuestion extends React.Component {
     title: 'Review Question',
   };
 
+  state ={
+    isVisible: false,
+    errorMessage:''
+  }
+
   render() {
 
     const { navigation } = this.props;
+
+    const {isVisible, errorMessage} = this.state
 
     const newQuestionId = navigation.getParam('newQuestionId', 'NO-ID')
     const oldQuestionId = navigation.getParam('oldQuestionId', 'NO-ID')
@@ -104,6 +111,16 @@ export default class ReviewQuestion extends React.Component {
           }}
           </Query>
 
+          <View>
+          {isVisible &&
+            <>
+            <Text style={styles.messages}>Something is wrong!</Text>
+            <Text style={styles.messages}>{errorMessage}</Text>
+            </>
+
+          }
+          </View>
+
              <Mutation
                  mutation={SEND_QUESTION_MUTATION}
                  variables={{
@@ -111,6 +128,7 @@ export default class ReviewQuestion extends React.Component {
                    testId: testId
                  }}
                  onCompleted={data => this._confirm(data)}
+                 onError={error => this._error (error)}
                >
                  {mutation => (
                    <ButtonColor
@@ -131,6 +149,15 @@ export default class ReviewQuestion extends React.Component {
       </ScrollView>
     );
   }
+
+  _error = async error => {
+      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+
+      this.setState({ isVisible: true, errorMessage})
+  }
+
   _confirm = (data) => {
     const { id,question } = data.sendQuestion
     const { navigation } = this.props;
@@ -185,6 +212,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin:5,
     padding:10
+  },
+  messages: {
+    padding:30,
+    fontSize:18,
+    textAlign:'center',
+    color:'red'
   },
   input:{
     height: 40,

@@ -2,7 +2,7 @@ import React from 'react';
 import { AsyncStorage, KeyboardAvoidingView, StyleSheet, Platform, Image, Text, View, ScrollView,TextInput,Alert } from 'react-native';
 import { Facebook } from 'expo';
 import {SecureStore} from 'expo'
-import { Button, Input, Icon } from 'react-native-elements'
+import { Button, Input, Icon, Overlay } from 'react-native-elements'
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -55,24 +55,36 @@ export default class SignIn extends React.Component {
      state = {
        email: '',
        password: '',
-       errorMessage: ''
+       errorMessage: '',
+       isVisible:false
      }
 
 
 
   render() {
 
-    const { email, password, errorMessage } = this.state
+    const { email, password, errorMessage, isVisible } = this.state
 
     return (
       <KeyboardAvoidingView
       style={styles.container}
       behavior="padding" >
 
+
+
       <SignInHeader
       title='Quandria Sign In'
-      errorMessage={errorMessage}
       />
+
+      <View>
+      {isVisible &&
+        <>
+        <Text style={styles.messages}>Something is wrong!</Text>
+        <Text style={styles.messages}>{errorMessage}</Text>
+        </>
+
+      }
+      </View>
 
     <TextInput
      placeholder='Email'
@@ -106,12 +118,17 @@ export default class SignIn extends React.Component {
           )}
         </Mutation>
 
+
       </KeyboardAvoidingView>
     );
   }
 
   _error = async error => {
-      this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+
+      this.setState({ isVisible: true, errorMessage})
   }
 
   _confirm = async data => {
@@ -144,5 +161,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin:10,
     paddingLeft:20
-  }
+  },
+  messages: {
+    padding:30,
+    fontSize:18,
+    textAlign:'center',
+    color:'red'
+  },
 });

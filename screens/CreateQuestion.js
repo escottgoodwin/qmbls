@@ -88,6 +88,8 @@ export default class CreateQuestion extends React.Component {
     choiceCorrect3:false,
     choice4:'',
     choiceCorrect4:false,
+    isVisible: false,
+    errorMessage:''
   };
 
   render(){
@@ -105,6 +107,8 @@ export default class CreateQuestion extends React.Component {
     choiceCorrect3,
     choice4,
     choiceCorrect4,
+    isVisible,
+    errorMessage
     } = this.state
 
     return(
@@ -174,6 +178,16 @@ export default class CreateQuestion extends React.Component {
              placeholder='Choice 4'
              />
 
+             <View>
+             {isVisible &&
+               <>
+               <Text style={styles.messages}>Something is wrong!</Text>
+               <Text style={styles.messages}>{errorMessage}</Text>
+               </>
+
+             }
+             </View>
+
              <Mutation
                  mutation={CREATE_QUESTION_MUTATION}
                  variables={{
@@ -215,9 +229,11 @@ export default class CreateQuestion extends React.Component {
   }
 
   _error = async error => {
-    const { navigation } = this.props;
-    const questionId = 'cjrr295lj00380859es8ey4eh'
-    this.props.navigation.navigate('CreateQuestionError',{error: JSON.stringify(error),questionId:questionId})
+      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+
+      this.setState({ isVisible: true, errorMessage})
   }
 
 
@@ -242,6 +258,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 5,
+  },
+  messages: {
+    padding:30,
+    fontSize:18,
+    textAlign:'center',
+    color:'red'
   },
   logo: {
     height: 220,
@@ -274,6 +296,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin:5,
     padding:10
+  },
+  messages: {
+    padding:30,
+    fontSize:18,
+    textAlign:'center',
+    color:'red'
   },
   answer:{
     height: 40,

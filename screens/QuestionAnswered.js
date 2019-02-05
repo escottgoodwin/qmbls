@@ -6,7 +6,7 @@ import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import ButtonColor from '../components/ButtonColor'
-import ReviewChoice from '../components/ReviewChoice'
+import AnsweredChoice from '../components/AnsweredChoice'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
 
@@ -119,7 +119,7 @@ export default class QuestionAnswered extends React.Component {
             {
               answerToRender.question.choices.map(choice =>
 
-                <ReviewChoice key={choice.id} {...choice} />
+                <AnsweredChoice key={choice.id} {...choice} />
 
             )
           }
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     margin:10
   },
   question:{
+    fontSize: 20,
     minHeight: 50,
     alignItems: 'center',
     backgroundColor:'white',

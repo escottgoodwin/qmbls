@@ -35,7 +35,6 @@ const SignInHeader = (props) =>
 
   SignInHeader.propTypes = {
     title: PropTypes.string.isRequired,
-    errorMessage: PropTypes.string.isRequired,
   };
 
 export default SignInHeader
