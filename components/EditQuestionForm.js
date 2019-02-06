@@ -103,7 +103,26 @@ export default class EditQuestionForm extends React.Component {
     choiceCorrect3,
     choice4,
     choiceCorrect4,
+    isVisible,
+    errorMessage
     } = this.state
+
+    const updateQuestionContent = {
+      id: id,
+      question: question,
+      choice1: choice1,
+      choice2: choice2,
+      choice3: choice3,
+      choice4: choice4,
+      choiceCorrect1: choiceCorrect1,
+      choiceCorrect2: choiceCorrect2,
+      choiceCorrect3: choiceCorrect3,
+      choiceCorrect4: choiceCorrect4,
+      choice1Id: choices[0].id,
+      choice2Id: choices[1].id,
+      choice3Id: choices[2].id,
+      choice4Id: choices[3].id,
+    }
 
     return(
       <>
@@ -171,24 +190,27 @@ export default class EditQuestionForm extends React.Component {
 
        <Mutation
            mutation={EDIT_QUESTION_MUTATION}
-           variables={{
-             id: id,
-             question: question,
-             choice1: choice1,
-             choice2: choice2,
-             choice3: choice3,
-             choice4: choice4,
-             choiceCorrect1: choiceCorrect1,
-             choiceCorrect2: choiceCorrect2,
-             choiceCorrect3: choiceCorrect3,
-             choiceCorrect4: choiceCorrect4,
-             choice1Id: choices[0].id,
-             choice2Id: choices[1].id,
-             choice3Id: choices[2].id,
-             choice4Id: choices[3].id,
-           }}
+           variables={updateQuestionContent}
            onCompleted={data => this._confirm(data)}
            onError={error => this._error (error)}
+           refetchQueries={() => {
+              return [{
+                 query: gql`
+                 query EditQuestionQuery($questionId:ID!){
+                   question(id:$questionId){
+                     id
+                     question
+                     choices{
+                       id
+                       choice
+                       correct
+                     }
+                   }
+                 }
+                 `,
+                 variables: { questionId: id }
+             }];
+         }}
          >
            {mutation => (
              <ButtonColor

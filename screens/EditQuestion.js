@@ -29,7 +29,6 @@ query EditQuestionQuery($questionId:ID!){
       subject
       testDate
       testNumber
-
       course{
         name
         institution{
