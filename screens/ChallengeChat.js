@@ -9,7 +9,6 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
-import ChallengeRow from '../components/ChallengeRow'
 
 const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
 mutation AddChallengeMessage($challengeId: ID!, $challengeMessage: String!) {
@@ -62,14 +61,6 @@ query AnswerQuestionQuery($questionId:ID!){
     }
   }
 }
-`
-
-const CREATE_CHALLENGE_MUTATION = gql`
-  mutation CreateChallenge($answerId:ID!,$challenge:String!){
-    addChallenge(challenge:$challenge,answerId:$answerId){
-      id
-    }
-  }
 `
 
 const CHALLENGE_MESSAGE_QUERY = gql`
@@ -134,8 +125,7 @@ export default class ChallengeDashboard extends React.Component {
 
 
   render() {
-    const { navigation } = this.props
-    const { challenge } = this.state
+    const { navigation } = this.props;
 
     const answerId = navigation.getParam('answerId', 'NO-ID')
     const questionId = navigation.getParam('answerId', 'NO-ID')
@@ -155,20 +145,39 @@ export default class ChallengeDashboard extends React.Component {
             return (
               <>
               <Text style={styles.welcome}>
-                {questionToRender.test.subject} - {questionToRender.test.testNumber}
-              </Text>
-
-              <Text style={styles.welcome}>
-                {questionToRender.question}
+              {answerToRender.question.test.subject} - {answerToRender.question.test.testNumber}
               </Text>
 
               <Text style={styles.welcome}>
                 Correct: {correctAnswer[0]}
               </Text>
 
-              {questionToRender.challenges.map(challenge => <ChallengeRow key={challenge.id} {...challenge} />)}
+                {
+                  questionToRender.challenges.map(challenge => <ChallengeRow key={challenge.id} {...challenge} />)
+                }
 
+
+            <Image key={answerToRender.question.panel.link} source={{uri: answerToRender.question.panel.link} style={[styles.logo]}/>
             </>
+
+            <ChallengeMessageList {...challenge}
+              subscribeToNewChallengeMessage={() =>
+                subscribeToMore({
+                  document: CHALLENGE_MESSAGE_SUBSCRIPTION,
+                  variables: {challengeId: this.props.challenges.id },
+                  updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data) return prev
+                    const newChallengeMsg = subscriptionData.data.challengeMsg.node
+                    return  Object.assign({}, prev, {
+                      challenge: {
+                        challengeMessages: [...prev.challenge.challengeMessages,newChallengeMsg],
+                        __typename: prev.challenge.__typename
+                    }
+                    })
+                  }
+                })
+              }
+              />
           )
         }}
         </Query>
@@ -184,9 +193,75 @@ export default class ChallengeDashboard extends React.Component {
 
 
          <Mutation
-             mutation={CREATE_CHALLENGE_MUTATION}
-             variables={{ answerId: answerId, challenge:challenge }}
+             mutation={ADD_CHALLENGE_MESSAGE_MUTATION}
+             variables={{ challengeId: this.props.challenges.id, challengeMessage:challengeMessage }}
              onCompleted={data => this._confirm(data)}
+             refetchQueries={() => {
+                return [{
+                   query: gql`
+                   query TestChallenges($testId:ID!){
+                     test(id:$testId){
+                         id
+                         subject
+                         testNumber
+                         testDate
+
+                         course{
+                           id
+                           name
+                           courseNumber
+                         }
+                         questions{
+                           challenges{
+                             challenge
+                             addedBy{
+                               id
+                               firstName
+                               lastName
+                             }
+                             challengeMessages{
+                               id
+                               challengeMessage
+                               addedDate
+                               addedBy{
+                                 firstName
+                                 lastName
+                               }
+                             }
+                             id
+                             question{
+                               question
+                               choices{
+                                 correct
+                                 choice
+                               }
+                   						questionAnswers{
+                                 addedBy{
+                                   id
+                                   firstName
+                                 }
+                                 answer{
+                                   choice
+                                 }
+                               }
+                               panel{
+                                 link
+                               }
+                               addedBy{
+                                 firstName
+                                 lastName
+                               }
+                             }
+
+                           }
+                         }
+
+                       }
+                   }
+                 `,
+                   variables: { testId: test_id }
+               }];
+               }} >
              {mutation => (
 
                <ButtonColor
@@ -209,7 +284,7 @@ export default class ChallengeDashboard extends React.Component {
   }
   _confirm = (data) => {
     const { id } = data.addChallenge
-    this.props.navigation.navigate('ChallengeChat',{ challengeId: id })
+    this.props.navigation.navigate('ChallengeDashboard',{ challengeId: id })
     }
 
 }

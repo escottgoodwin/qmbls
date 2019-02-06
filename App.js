@@ -83,6 +83,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+const prefix = Expo.Linking.makeUrl('/');
+
 const AppNavigator = createStackNavigator(
   {
     Welcome: Welcome,
@@ -94,13 +96,16 @@ const AppNavigator = createStackNavigator(
     StudentDashboard: StudentDashboard,
     CourseDashboard: CourseDashboard,
     TestDashboard: TestDashboard,
-    CreateQuestion: CreateQuestion,
+    CreateQuestion: {
+      screen: CreateQuestion,
+      path: 'question/:questionId',
+    },
     EditQuestion: EditQuestion,
     ReviewQuestion: ReviewQuestion,
     AnswerQuestion: AnswerQuestion,
     QuestionAnswered: QuestionAnswered,
     Error:Error,
-    CreateQuestionError:CreateQuestionError 
+    CreateQuestionError:CreateQuestionError,
   },
   {
     initialRouteName: "Welcome"
@@ -111,7 +116,7 @@ const Container = createAppContainer(AppNavigator);
 
 const App = () => (
   <ApolloProvider client={client}>
-    <Container />
+    <Container uriPrefix={prefix} />
   </ApolloProvider>
 );
 
