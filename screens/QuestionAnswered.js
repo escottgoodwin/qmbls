@@ -21,6 +21,7 @@ query AnswerQuery($answerId:ID!){
       correct
     }
     question{
+      id
       question
       choices{
         id
@@ -127,7 +128,7 @@ export default class QuestionAnswered extends React.Component {
            <ButtonColor
            title="Challenge Answer"
            backgroundcolor="#282828"
-           onpress={() => this.props.navigation.navigate('ChallengeAnswer',{ answerId:answerToRender.id })}
+           onpress={() => this.props.navigation.navigate('ChallengeDashboard',{ answerId: answerToRender.id,questionId:answerToRender.question.id })}
            />
 
           <ButtonColor

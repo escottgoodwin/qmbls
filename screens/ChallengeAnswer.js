@@ -198,6 +198,7 @@ export default class CreateQuestion extends React.Component {
       this.setState({ isVisible: true, errorMessage})
   }
 
+
   _confirm = (data) => {
     const { id } = data.addChallenge
 

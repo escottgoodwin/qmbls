@@ -25,7 +25,8 @@ import EditQuestion from './screens/EditQuestion';
 import ReviewQuestion from './screens/ReviewQuestion';
 import AnswerQuestion from './screens/AnswerQuestion';
 import QuestionAnswered from './screens/QuestionAnswered'
-
+import ChallengeDashboard from './screens/ChallengeDashboard'
+import Challenge from './screens/Challenge'
 
 import Loading from './components/Loading'
 import Error from './screens/Error'
@@ -106,6 +107,8 @@ const AppNavigator = createStackNavigator(
     QuestionAnswered: QuestionAnswered,
     Error:Error,
     CreateQuestionError:CreateQuestionError,
+    ChallengeDashboard:ChallengeDashboard,
+    Challenge:Challenge
   },
   {
     initialRouteName: "Welcome"

@@ -11,56 +11,49 @@ import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
 import ChallengeRow from '../components/ChallengeRow'
 
-const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
-mutation AddChallengeMessage($challengeId: ID!, $challengeMessage: String!) {
-  addChallengeMessage(challengeMessage: $challengeMessage,
-  challengeId: $challengeId){
-    addedBy{
-      firstName
+const CHALLENGE_ANSWER_QUERY = gql`
+query ChallengeAnswerQuery($questionId:ID!){
+  answers(where:{question:{id:$questionId}}){
+    answers{
+    id
+    answer{
+      id
+      choice
+      correct
     }
-    challengeMessage
-    challenge{
-      answer{
-        answer{
-          choice
+    question{
+      id
+      question
+      panel{
+        id
+        link
+      }
+      choices{
+        id
+        choice
+        correct
+      }
+      challenges{
+        id
+        challenge
+      }
+      test{
+        id
+        subject
+        testNumber
+        course
+        {
+          id
+          name
+          institution{
+            id
+            name
+          }
         }
       }
     }
   }
 }
-`
-
-const CHALLENGE_QUESTION_QUERY = gql`
-query AnswerQuestionQuery($questionId:ID!){
-  question(id:$questionId){
-    id
-    question
-    choices {
-      id
-      choice
-      correct
-    }
-  challenges{
-    id
-    challenge
-    addedDate
-    addedBy{
-      firstName
-      lastName
-    }
-  }
-    test{
-      id
-      subject
-      testNumber
-      course{
-        name
-        institution{
-          name
-        }
-      }
-    }
-  }
 }
 `
 
@@ -72,106 +65,59 @@ const CREATE_CHALLENGE_MUTATION = gql`
   }
 `
 
-const CHALLENGE_MESSAGE_QUERY = gql`
-    query ChallengeQuery($challengeId:ID!){
-      challenge(id:$challengeId){
-         id
-      challenge
-      question{
-        question
-        addedDate
-        addedBy{
-          firstName
-          lastName
-        }
-      }
-      addedBy{
-        firstName
-        lastName
-      }
-      addedDate
-      }
-    challengeMessages{
-      challengeMessages{
-        challengeMessage
-        addedDate
-        addedBy{
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-  `
-
-const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
-  subscription ChallengeMsgSub($challengeId:ID!){
-    challengeMsg(challengeId:$challengeId){
-      node{
-        id
-        challengeMessage
-        addedDate
-        addedBy{
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-  `
-
-
 export default class ChallengeDashboard extends React.Component {
 
   static navigationOptions = {
     title: 'Challenge Answer'
-  };
+  }
 
-    this.state = {
-      challenge:''
+    state = {
+      challenge:'',
+      isVisible: false,
+      errorMessage:''
     }
-
 
 
   render() {
     const { navigation } = this.props
-    const { challenge } = this.state
+    const { challenge, isVisible, errorMessage } = this.state
 
     const answerId = navigation.getParam('answerId', 'NO-ID')
-    const questionId = navigation.getParam('answerId', 'NO-ID')
+    const questionId = navigation.getParam('questionId', 'NO-ID')
 
     return (
       <ScrollView contentContainerStyle={styles.container}>
 
-        <Query query={CHALLENGE_QUESTION_QUERY} variables={{ questionId: questionId }}>
+        <Query query={CHALLENGE_ANSWER_QUERY} variables={{ questionId: questionId }}>
               {({ loading, error, data }) => {
                 if (loading) return <Loading1 />
                 if (error) return <Text>{JSON.stringify(error)}</Text>
 
-                const questionToRender = data.question
-
-                const correctAnswer = questionToRender.choices.filter(choice => choice.correct === true)
+                const questionToRender = data.answers.answers[0]
 
             return (
               <>
               <Text style={styles.welcome}>
-                {questionToRender.test.subject} - {questionToRender.test.testNumber}
+              {questionToRender.question.test.course.name} - {questionToRender.question.test.course.institution.name}
               </Text>
 
               <Text style={styles.welcome}>
-                {questionToRender.question}
+                {questionToRender.question.test.subject} - {questionToRender.question.test.testNumber}
               </Text>
 
-              <Text style={styles.welcome}>
-                Correct: {correctAnswer[0]}
+              <Text style={styles.choice}>
+                {questionToRender.question.question}
               </Text>
 
-              {questionToRender.challenges.map(challenge => <ChallengeRow key={challenge.id} {...challenge} />)}
+              <Text style={styles.choice}>
+                Correct: {questionToRender.question.choices.filter(choice => choice.correct)[0].choice}
+              </Text>
 
-            </>
-          )
-        }}
-        </Query>
+              <Text style={styles.choice}>
+                Your Choice: {questionToRender.answer.choice}
+              </Text>
+
+              <Image key={questionToRender.question.panel.link} source={{uri: questionToRender.question.panel.link }} style={styles.logo} />
 
         <TextInput
           placeholder='Challenge Question'
@@ -182,35 +128,66 @@ export default class ChallengeDashboard extends React.Component {
           value={this.state.challenge}
          />
 
+         <View>
+         {isVisible &&
+           <>
+           <Text style={styles.messages}>Something is wrong!</Text>
+           <Text style={styles.messages}>{errorMessage}</Text>
+           </>
+
+         }
+         </View>
+
          <Mutation
              mutation={CREATE_CHALLENGE_MUTATION}
-             variables={{ answerId: answerId, challenge:challenge }}
+             variables={{
+               challenge: challenge,
+               answerId: answerId
+             }}
              onCompleted={data => this._confirm(data)}
+             onError={error => this._error (error)}
+           >
              {mutation => (
-
                <ButtonColor
-               title="Challenge Question"
-               backgroundcolor="#900000"
+               title="Submit Challenge"
+               backgroundcolor="#282828"
                onpress={mutation}
                />
-               //<Button size="tiny" color='teal' onClick={mutation}>Submit</Button>
              )}
            </Mutation>
+
+         <Text style={styles.welcome}>
+           Other Challenges of this Question
+         </Text>
+
+         {questionToRender.question.challenges.map(challenge => <ChallengeRow key={challenge.id} {...challenge} />)}
 
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
-         onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: answerToRender.question.test.id })}
+         onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
          />
+         </>
+       )
+     }}
+     </Query>
 
       </ScrollView>
-    );
+    )
   }
+
+  _error = async error => {
+      //this.props.navigation.navigate('Error',{error: JSON.stringify(error)})
+      //const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+      const errorMessage = error.graphQLErrors.map((err,i) => err.message)
+
+      this.setState({ isVisible: true, errorMessage})
+  }
+
   _confirm = (data) => {
     const { id } = data.addChallenge
-    this.props.navigation.navigate('ChallengeChat',{ challengeId: id })
+    this.props.navigation.navigate('Challenge',{ challengeId: id })
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -219,6 +196,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    minHeight:800
+  },
+  choice:{
+    flexDirection:"row",
+    minHeight: 50,
+    alignItems: 'center',
+    backgroundColor:'white',
+    width: 300,
+    padding:10,
+    margin:10
+  },
+  question:{
+    fontSize: 20,
+    minHeight: 50,
+    alignItems: 'center',
+    backgroundColor:'white',
+    width: 300,
+    padding:10,
+    margin:10
   },
   logo: {
     height: 200,

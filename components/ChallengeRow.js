@@ -43,9 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-Choice.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  changetext: PropTypes.func.isRequired
-};
-
 export default ChallengeRow
