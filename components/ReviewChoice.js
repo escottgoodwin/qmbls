@@ -6,27 +6,24 @@ import { Button, Icon, Divider } from 'react-native-elements'
 const ReviewChoice = (props) =>
 
 <View style={styles.choice}>
-  <View style={styles.choice}>
   {props.correct ?
     <Icon
       name='check-square'
       type='font-awesome'
       color='#4AC948'
        />
-       :
-       <Icon
-         name='times-circle'
-         type='font-awesome'
-         color='#ff0000'
-          />
+     :
+     <Icon
+       name='times-circle'
+       type='font-awesome'
+       color='#ff0000'
+        />
   }
 
   <Text style={{padding:10}} >
     {props.choice}
   </Text>
 
-  </View>
-  <Divider />
   </View>
 
 const styles = StyleSheet.create({
@@ -36,7 +33,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor:'white',
     width: 300,
-    padding:10
+    padding:10,
+    margin:5
   },
   choicetext:{
     fontWeight:'bold',

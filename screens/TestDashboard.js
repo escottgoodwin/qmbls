@@ -7,6 +7,8 @@ import Loading1 from '../components/Loading1'
 
 import TestCard from '../components/TestCard'
 import ButtonColor from '../components/ButtonColor'
+import AnsweredStats from '../components/AnsweredStats'
+import QuestionStats from '../components/QuestionStats'
 
 const TEST_QUERY = gql`
 query TestQuery($test_id:ID!){
@@ -58,20 +60,10 @@ export default class TestDashboard extends React.Component {
             {testToRender.course.name} - {testToRender.testNumber}
           </Text>
 
-          <TouchableOpacity style={{margin:10}} onPress={() => this.props.navigation.navigate('QuestionsAnswered',{test_id:testToRender.id})} >
-          <Card title='Answered' containerStyle={{width: 300}}>
-          <Text style={styles.instructions}>Questions Total:  </Text>
-          <Text style={styles.instructions}>Correct:  </Text>
-          </Card >
-          </TouchableOpacity>
+          <AnsweredStats navigation={this.props.navigation} testId={testId} />
 
-          <TouchableOpacity style={{margin:10}} onPress={() => this.props.navigation.navigate('QuestionsCreated',{test_id:testToRender.id})} >
-          <Card title='Created' containerStyle={{width: 300}}>
-          <Text style={styles.instructions}>Questions Total:  </Text>
-          <Text style={styles.instructions}>Correct: </Text>
-          </Card >
-          </TouchableOpacity>
-  
+          <QuestionStats navigation={this.props.navigation} testId={testId} />
+
           {testToRender.release &&
             <ButtonColor
             title="All Questions"

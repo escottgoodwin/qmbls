@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
   touch: {
     width: 300,
     margin:5,
-    backgroundColor:"#e4fef1",
+    backgroundColor:"white",
+    borderColor:"#e4fef1",
     borderRadius:5,
     padding:3
   },

@@ -182,7 +182,6 @@ export default class ChallengeDashboard extends React.Component {
           value={this.state.challenge}
          />
 
-
          <Mutation
              mutation={CREATE_CHALLENGE_MUTATION}
              variables={{ answerId: answerId, challenge:challenge }}
