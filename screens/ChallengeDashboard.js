@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
+import { StyleSheet, Platform, FlatList, TouchableOpacity, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
 import { Button,Card } from 'react-native-elements'
+const moment = require('moment')
 
 import DisputeQuestion from '../components/DisputeQuestion'
 import { Query, Mutation } from "react-apollo";
@@ -9,7 +10,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
-import ChallengeRow from '../components/ChallengeRow'
+import ChallengeList from '../components/ChallengeList'
 
 const CHALLENGE_ANSWER_QUERY = gql`
 query ChallengeAnswerQuery($questionId:ID!){
@@ -86,7 +87,8 @@ export default class ChallengeDashboard extends React.Component {
     const questionId = navigation.getParam('questionId', 'NO-ID')
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
+      <ScrollView >
 
         <Query query={CHALLENGE_ANSWER_QUERY} variables={{ questionId: questionId }}>
               {({ loading, error, data }) => {
@@ -160,12 +162,12 @@ export default class ChallengeDashboard extends React.Component {
            Other Challenges of this Question
          </Text>
 
-         {questionToRender.question.challenges.map(challenge => <ChallengeRow key={challenge.id} {...challenge} />)}
+         <ChallengeList navigation={navigation} questionToRender={questionToRender} />
 
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
-         onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
+         onpress={() => navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
          />
          </>
        )
@@ -173,6 +175,8 @@ export default class ChallengeDashboard extends React.Component {
      </Query>
 
       </ScrollView>
+      </View>
+
     )
   }
 
@@ -186,17 +190,17 @@ export default class ChallengeDashboard extends React.Component {
 
   _confirm = (data) => {
     const { id } = data.addChallenge
-    this.props.navigation.navigate('Challenge',{ challengeId: id })
+    navigation.navigate('Challenge',{ challengeId: id })
     }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "column",
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    minHeight:800
   },
   choice:{
     flexDirection:"row",

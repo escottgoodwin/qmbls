@@ -91,6 +91,26 @@ export default class ChallengeChat extends React.Component {
 
           return (
             <>
+
+            <ChallengeMessageList {...challengeMessages}
+              subscribeToNewChallengeMessage={() =>
+                subscribeToMore({
+                  document: CHALLENGE_MESSAGE_SUBSCRIPTION,
+                  variables: {challengeId: id },
+                  updateQuery: (prev, { subscriptionData }) => {
+                    if (!subscriptionData.data) return prev
+                    const newChallengeMsg = subscriptionData.data.challengeMsg.node
+                    return  Object.assign({}, prev, {
+                      challengeMessages: {
+                        challengeMessages: [...prev.challengeMessages,newChallengeMsg],
+                        __typename: prev.challengeMsg.__typename
+                    }
+                    })
+                  }
+                })
+              }
+              />
+
             <TextInput
               placeholder='Challenge Message'
               style={{height: 40,width: 320, backgroundColor:'white',borderRadius: 10,borderColor: 'darkgrey',margin:5,padding:10}}

@@ -1,25 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, Dimensions,  } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity  } from 'react-native';
 import PropTypes from 'prop-types';
 import { Button, CheckBox } from 'react-native-elements'
 const moment = require('moment')
 
 import ButtonColor from '../components/ButtonColor'
 
-
 const ChallengeRow = (props) =>
 
   <View style={styles.choices}>
 
-  <Text>{props.challenge} </Text>
-  <Text>{props.addedBy.firstName} {props.addedBy.lastName} </Text>
-  <Text>{moment(props.addedDate).calendar()}</Text>
+  <TouchableOpacity style={styles.touch}
+  onpress={() => props.navigation.navigate('Challenge',{ challengeId: props.challenge.id })}
+  >
+  <Text>Challenge: {props.challenge.challenge} </Text>
+  <Text>{props.challenge.addedBy.firstName} {props.challenge.addedBy.lastName}</Text>
+  <Text>{moment(props.challenge.addedDate).calendar()}</Text>
 
-  <ButtonColor
-  title="Go"
-  backgroundcolor="#282828"
-  onpress={() => this.props.navigation.navigate('ChallengeChat',{ challengeId: props.id })}
-  />
+  </TouchableOpacity>
+
   </View>
 
 const styles = StyleSheet.create({
@@ -27,6 +26,14 @@ const styles = StyleSheet.create({
     flexDirection:"row",
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  touch: {
+    width: 300,
+    margin:5,
+    backgroundColor:"white",
+    borderColor:"#e4fef1",
+    borderRadius:5,
+    padding:3
   },
   choicetext:{
     fontWeight:'bold',

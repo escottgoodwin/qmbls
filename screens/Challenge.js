@@ -82,7 +82,8 @@ export default class Challenge extends React.Component {
     const { challenge, challengeMessage, isVisible, errorMessage } = this.state
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
+      <ScrollView>
 
         <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }}>
               {({ loading, error, data }) => {
@@ -111,12 +112,10 @@ export default class Challenge extends React.Component {
                 Challenge: {challengeToRender.challenge}
               </Text>
 
-              <ChallengeChat {...challengeToRender}/>
-
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
-         onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: challengeToRender.question.test.id })}
+         onpress={() => navigation.navigate('TestDashboard',{ testId: challengeToRender.question.test.id })}
          />
          </>
        )
@@ -124,6 +123,7 @@ export default class Challenge extends React.Component {
      </Query>
 
       </ScrollView>
+      </View>
     )
   }
 
@@ -132,6 +132,7 @@ export default class Challenge extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection:"column",
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',

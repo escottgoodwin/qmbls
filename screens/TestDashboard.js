@@ -46,7 +46,8 @@ export default class TestDashboard extends React.Component {
     const testId = navigation.getParam('testId', 'NO-ID')
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
+      <ScrollView>
       <Query query={TEST_QUERY} variables={{ test_id: testId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
@@ -86,6 +87,7 @@ export default class TestDashboard extends React.Component {
 
 
       </ScrollView>
+      </View>
     );
   }
 }
@@ -93,6 +95,7 @@ export default class TestDashboard extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
