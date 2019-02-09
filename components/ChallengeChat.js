@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView,TextInput,Alert} from 'react-native';
 import { Button,Card } from 'react-native-elements'
+const moment = require('moment')
 
 import DisputeQuestion from '../components/DisputeQuestion'
 import { Query, Mutation } from "react-apollo";
@@ -10,22 +11,8 @@ import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
 import ChallengeMessageList from '../components/ChallengeMessageList'
+import ChallengeMessageRow from '../components/ChallengeMessageRow'
 
-const CHALLENGE_MESSAGE_QUERY = gql`
-query ChallengeMessages($challengeId:ID!){
-  challengeMessages(where:{challenge:{id:$challengeId}}){
-    count
-    challengeMessages{
-      challengeMessage
-      addedDate
-      addedBy{
-        firstName
-        lastName
-      }
-    }
-  }
-}
-`
 
 const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
   subscription ChallengeMsgSub($challengeId:ID!){
@@ -44,24 +31,36 @@ const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
   `
 
   const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
-  mutation AddChallengeMessage($challengeId: ID!, $challengeMessage: String!) {
-    addChallengeMessage(challengeMessage: $challengeMessage,
-    challengeId: $challengeId){
-      addedBy{
-        firstName
-      }
-      challengeMessage
-      challenge{
-        answer{
-          answer{
-            choice
+    mutation AddChallengeMessage($challengeId: ID!,
+      $challengeMessage: String!) {
+        addChallengeMessage(challengeMessage: $challengeMessage,
+          challengeId: $challengeId){
+            id
+            challengeMessage
+            addedDate
+            addedBy{
+              firstName
+              lastName
+              id
+            }
           }
+      }
+  `
+  const CHALLENGE_MESSAGE_QUERY = gql`
+  query ChallengeMessages($challengeId:ID!){
+    challengeMessages(where:{challenge:{id:$challengeId}}){
+      challengeMessages{
+        id
+        challengeMessage
+        addedDate
+        addedBy{
+          firstName
+          lastName
         }
       }
     }
   }
   `
-
 
 export default class ChallengeChat extends React.Component {
 
@@ -71,45 +70,35 @@ export default class ChallengeChat extends React.Component {
 
     state = {
       challengeMessage:'',
+      count:'',
       isVisible: false,
-      errorMessage:''
+      errorMessage:'',
+      challengeMessages:[],
+      challengeMessages1:[]
+    }
+
+    componentDidMount(){
+      const { challengeMessages } = this.props.challenge
+      this.setState({challengeMessages1:challengeMessages,count:challengeMessages.length})
     }
 
   render() {
-    const { id } = this.props
+    const challengeId = this.props.challengeId
 
     const { challengeMessage, isVisible, errorMessage } = this.state
 
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-      <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: id }}>
-            {({ loading, error, data }) => {
-              if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
-
-              const challengeMessages = data.challengeMessages.challengeMessages
-
-          return (
+      <View style={styles.container}>
             <>
+            <Text>Messages - {this.state.count}</Text>
 
-            <ChallengeMessageList {...challengeMessages}
-              subscribeToNewChallengeMessage={() =>
-                subscribeToMore({
-                  document: CHALLENGE_MESSAGE_SUBSCRIPTION,
-                  variables: {challengeId: id },
-                  updateQuery: (prev, { subscriptionData }) => {
-                    if (!subscriptionData.data) return prev
-                    const newChallengeMsg = subscriptionData.data.challengeMsg.node
-                    return  Object.assign({}, prev, {
-                      challengeMessages: {
-                        challengeMessages: [...prev.challengeMessages,newChallengeMsg],
-                        __typename: prev.challengeMsg.__typename
-                    }
-                    })
-                  }
-                })
-              }
-              />
+            <View>
+            {this.state.count>0 &&
+              this.state.challengeMessages1.map(item =>
+              <ChallengeMessageRow key={item.id} {...item}/>
+            )
+            }
+            </View>
 
             <TextInput
               placeholder='Challenge Message'
@@ -122,7 +111,7 @@ export default class ChallengeChat extends React.Component {
 
              <Mutation
                  mutation={ADD_CHALLENGE_MESSAGE_MUTATION}
-                 variables={{ challengeId: id, challengeMessage:challengeMessage }}
+                 variables={{ challengeId: challengeId, challengeMessage:challengeMessage }}
                  onCompleted={data => this._confirm(data)}
                  >
                  {mutation => (
@@ -133,24 +122,21 @@ export default class ChallengeChat extends React.Component {
                    />
                  )}
                </Mutation>
-       </>
-     )
-   }}
-   </Query>
-
-    </ScrollView>
-    )
-  }
-  _confirm = (data) => {
-    const { id } = data.addChallenge
-    this.props.navigation.navigate('ChallengeDashboard',{ challengeId: id })
+         </>
+      </View>
+      )
     }
+  _confirm = (data) => {
+    let challengeMessagesUpdate = [...this.state.challengeMessages1,data.addChallengeMessage]
+    this.setState({challengeMessages1:challengeMessagesUpdate,challengeMessage:'',count:challengeMessagesUpdate.length})
+  }
 
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection:'column',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',

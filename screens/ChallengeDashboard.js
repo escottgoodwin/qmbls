@@ -83,8 +83,8 @@ export default class ChallengeDashboard extends React.Component {
     const { navigation } = this.props
     const { challenge, isVisible, errorMessage } = this.state
 
-    const answerId = navigation.getParam('answerId', 'NO-ID')
-    const questionId = navigation.getParam('questionId', 'NO-ID')
+    const answerId = this.props.navigation.getParam('answerId', 'NO-ID')
+    const questionId = this.props.navigation.getParam('questionId', 'NO-ID')
 
     return (
       <View style={styles.container}>
@@ -162,12 +162,12 @@ export default class ChallengeDashboard extends React.Component {
            Other Challenges of this Question
          </Text>
 
-         <ChallengeList navigation={navigation} questionToRender={questionToRender} />
+         <ChallengeList navigation={this.props.navigation} questionToRender={questionToRender} />
 
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
-         onpress={() => navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
+         onpress={() => this.props.navigation.navigate('TestDashboard',{ testId: questionToRender.question.test.id })}
          />
          </>
        )
@@ -190,7 +190,7 @@ export default class ChallengeDashboard extends React.Component {
 
   _confirm = (data) => {
     const { id } = data.addChallenge
-    navigation.navigate('Challenge',{ challengeId: id })
+    this.props.navigation.navigate('Challenge',{ challengeId: id })
     }
 }
 

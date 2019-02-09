@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView,TextInput,Alert,Dimensions} from 'react-native';
 import { Button,Card } from 'react-native-elements'
+const moment = require('moment')
 
 import DisputeQuestion from '../components/DisputeQuestion'
 import { Query } from "react-apollo";
@@ -14,8 +15,17 @@ import ChallengeChat from '../components/ChallengeChat'
 const CHALLENGE_QUERY = gql`
 query ChallengeQuery($challengeId:ID!){
     challenge(id:$challengeId){
-       id
+    id
     challenge
+    challengeMessages{
+      id
+      challengeMessage
+      addedDate
+      addedBy{
+        firstName
+        lastName
+      }
+    }
     answer{
       id
       answer{
@@ -62,6 +72,23 @@ query ChallengeQuery($challengeId:ID!){
   }
 `
 
+const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
+  subscription ChallengeMsgSub($challengeId:ID!){
+    challengeMsg(challengeId:$challengeId){
+      node{
+        id
+        challengeMessage
+        addedDate
+        addedBy{
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+  `
+
+
 export default class Challenge extends React.Component {
 
   static navigationOptions = {
@@ -90,32 +117,51 @@ export default class Challenge extends React.Component {
                 if (loading) return <Loading1 />
                 if (error) return <Text>{JSON.stringify(error)}</Text>
 
-                const challengeToRender = data.challenge
+                const challenge = data.challenge
 
             return (
               <>
               <Text style={styles.welcome}>
-              {challengeToRender.answer.answer.question.test.subject} - {challengeToRender.answer.answer.question.test.testNumber}
+              {challenge.answer.answer.question.test.subject} - {challenge.answer.answer.question.test.testNumber}
               </Text>
 
               <Text style={styles.choice}>
-                  Correct: {challengeToRender.answer.answer.question.choices.filter(choice => choice.correct)[0].choice}
+                  Correct: {challenge.answer.answer.question.choices.filter(choice => choice.correct)[0].choice}
               </Text>
 
               <Text style={styles.choice}>
-                Your Choice: {challengeToRender.answer.answer.choice}
+                Your Choice: {challenge.answer.answer.choice}
               </Text>
 
-              <Image key={challengeToRender.answer.answer.question.panel.link} source={{uri: challengeToRender.answer.answer.question.panel.link }} style={styles.logo} />
+              <Image key={challenge.answer.answer.question.panel.link} source={{uri: challenge.answer.answer.question.panel.link }} style={styles.logo} />
 
               <Text style={styles.choice}>
-                Challenge: {challengeToRender.challenge}
+                Challenge: {challenge.challenge}
               </Text>
+
+              <ChallengeChat navigation={this.props.navigation} challengeId={challengeId} challenge={challenge}
+                subscribeToNewChallengeMessage={() =>
+                  subscribeToMore({
+                    document: CHALLENGE_MESSAGE_SUBSCRIPTION,
+                    variables: {challengeId: challengeId },
+                    updateQuery: (prev, { subscriptionData }) => {
+                      if (!subscriptionData.data) return prev
+                      const newChallengeMsg = subscriptionData.data.challengeMsg.node
+                      return  Object.assign({}, prev, {
+                        challenge: {
+                          challengeMessages: [...prev.challenge.challengeMessages,newChallengeMsg],
+                          __typename: prev.challenge.__typename
+                      }
+                      })
+                    }
+                  })
+                }
+              />
 
          <ButtonColor
          title="Cancel"
          backgroundcolor="#282828"
-         onpress={() => navigation.navigate('TestDashboard',{ testId: challengeToRender.question.test.id })}
+         onpress={() => navigation.navigate('TestDashboard',{ testId: challenge.question.test.id })}
          />
          </>
        )
@@ -136,7 +182,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-    minHeight:800
   },
   choice:{
     fontSize: 18,
