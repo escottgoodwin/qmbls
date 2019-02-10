@@ -65,13 +65,13 @@ export default class TestDashboard extends React.Component {
 
           <QuestionStats navigation={this.props.navigation} testId={testId} />
 
-          {testToRender.release &&
+
             <ButtonColor
             title="All Questions"
             backgroundcolor="#1abc9c"
-            onpress={() => this.props.navigation.navigate('AllQuestions',{test_id:testToRender.id})}
+            onpress={() => this.props.navigation.navigate('AllQuestions',{testId:testToRender.id})}
             />
-          }
+
 
           <ButtonColor
           title="Dashboard"

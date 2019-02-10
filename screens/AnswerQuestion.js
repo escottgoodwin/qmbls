@@ -25,8 +25,10 @@ const ANSWER_QUESTION_QUERY = gql`
         subject
         testNumber
         course{
+          id
           name
           institution{
+            id
             name
           }
         }
@@ -78,9 +80,9 @@ _onSelect = ( item ) => {
     const {isVisible, errorMessage} = this.state
 
     return (
-
+      <View styles={styles.container} >
       <ScrollView >
-      <View style={styles.container}>
+      <View styles={styles.container1} >
       <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
@@ -148,6 +150,7 @@ _onSelect = ( item ) => {
 
           </View>
       </ScrollView>
+      </View>
     );
   }
 
@@ -170,10 +173,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    backgroundColor: '#e4f1fe'
+  },
+  container1: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    height: Dimensions.get('window').height
   },
   card:{
     height: 320,

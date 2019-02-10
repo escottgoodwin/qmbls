@@ -22,6 +22,7 @@ query ChallengeQuery($challengeId:ID!){
       challengeMessage
       addedDate
       addedBy{
+        id
         firstName
         lastName
       }
@@ -106,7 +107,7 @@ export default class Challenge extends React.Component {
 
     const challengeId = navigation.getParam('challengeId', 'NO-ID')
 
-    const { challenge, challengeMessage, isVisible, errorMessage } = this.state
+    const { isVisible, errorMessage } = this.state
 
     return (
       <View style={styles.container}>

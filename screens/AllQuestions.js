@@ -1,52 +1,108 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import { StyleSheet, Platform, Image, FlatList, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import { Button, Card } from 'react-native-elements'
 
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
+
+import { Query, Mutation } from "react-apollo";
+import gql from "graphql-tag";
+
+import Loading1 from '../components/Loading1'
+
+const TEST_QUESTIONS_QUERY = gql`
+query TestQuestionsQuery($testId:ID!){
+  test(id:$testId){
+    id
+    subject
+    testNumber
+    testDate
+    course{
+      id
+      name
+    }
+    questions{
+      id
+      question
+    }
+  }
+}
+`
 
 
 export default class AllQuestions extends React.Component {
 
   static navigationOptions = {
     title: 'All Questions',
-  };
+  }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      uid: '',
-      all_questions :[],
-      test_id:'',
-      test_number:'',
-      coursename:''
-    };
+  state = {
+    challenge:'',
+    isVisible: false,
+    errorMessage:''
+  }
+
+answerRandom = (questions) =>  {
+    this.props.navigation.navigate("AnswerQuestion")
   }
 
   render() {
+
+    const testId = this.props.navigation.getParam('testId', 'NO-ID')
+
     return (
+
+      <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
+            {({ loading, error, data }) => {
+              if (loading) return <Loading1 />
+              if (error) return <Text>{JSON.stringify(error)}</Text>
+
+              const testToRender = data.test
+
+          return (
         <View style={styles.container}>
+        <ScrollView >
           <Text style={styles.welcome}>
-            {this.state.coursename} - {this.state.test_number}
+            {testToRender.course.name} - {testToRender.course.courseNumber}
+          </Text>
+
+          <Text style={styles.welcome}>
+            {testToRender.subject} - {testToRender.testNumber}
           </Text>
 
           <ButtonColor
           title="Answer Random Question"
           backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("AnswerQuestion",{'test_cycle_id':this.state.test_id})}
+          onpress={() => this.answerRandom(testToRender.questions)}
           />
 
-          <QAList
-          qa_list={this.state.all_questions}
-          navigation={this.props.navigation}
+          <FlatList
+          data={testToRender.questions}
+          renderItem={
+            ({ item, index }) => (
+              <TouchableOpacity style={styles.choice}
+              onPress={() => this.props.navigation.navigate('AnswerQuestion',{questionId:item.id })}>
+               <Text style={{fontSize:14,marginBottom:3}} >
+               {item.question}
+               </Text>
+
+              </TouchableOpacity>
+
+            )
+          }
+          keyExtractor={item => item.id}
           />
 
           <ButtonColor
-          title="Dashboard"
-          backgroundcolor="#003366"
-          onpress={() => this.props.navigation.navigate("Dashboard")}
+          title="Test Dashboard"
+          backgroundcolor="#282828"
+          onpress={() => this.props.navigation.navigate('TestDashboard',{ testId:testId })}
           />
+          </ScrollView >
         </View>
+      )
+    }}
+    </Query>
     );
   }
 }
@@ -57,6 +113,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
+  },
+  choice:{
+    minHeight: 50,
+    backgroundColor:'white',
+    width: 300,
+    padding:10,
+    margin:10
   },
   logo: {
     height: 120,

@@ -32,10 +32,11 @@ query AnswerQuery($answerId:ID!){
         id
         subject
         testNumber
-        course
-        {
+        course{
+          id
           name
           institution{
+            id
             name
           }
         }

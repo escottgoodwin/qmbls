@@ -24,6 +24,7 @@ import CreateQuestion from './screens/CreateQuestion';
 import EditQuestion from './screens/EditQuestion';
 import ReviewQuestion from './screens/ReviewQuestion';
 import AnswerQuestion from './screens/AnswerQuestion';
+import AllQuestions from './screens/AllQuestions';
 import QuestionAnswered from './screens/QuestionAnswered'
 import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
@@ -105,6 +106,7 @@ const AppNavigator = createStackNavigator(
     ReviewQuestion: ReviewQuestion,
     AnswerQuestion: AnswerQuestion,
     QuestionAnswered: QuestionAnswered,
+    AllQuestions:AllQuestions,
     Error:Error,
     CreateQuestionError:CreateQuestionError,
     ChallengeDashboard:ChallengeDashboard,

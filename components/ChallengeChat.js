@@ -78,27 +78,29 @@ export default class ChallengeChat extends React.Component {
     }
 
     componentDidMount(){
-      const { challengeMessages } = this.props.challenge
-      this.setState({challengeMessages1:challengeMessages,count:challengeMessages.length})
+      const { challenge } = this.props
+      this.setState({challengeMessages1:challenge.challengeMessages,count:challenge.challengeMessages.length})
     }
 
   render() {
-    const challengeId = this.props.challengeId
-
+    const { challenge } = this.props
+    const challengeId = challenge.id
     const { challengeMessage, isVisible, errorMessage } = this.state
 
     return (
       <View style={styles.container}>
             <>
-            <Text>Messages - {this.state.count}</Text>
+            <Text>Messages - {challenge.challengeMessages.length}</Text>
 
-            <View>
-            {this.state.count>0 &&
-              this.state.challengeMessages1.map(item =>
-              <ChallengeMessageRow key={item.id} {...item}/>
-            )
+            <FlatList
+            data={challenge.challengeMessages}
+            renderItem={
+              ({ item, index }) => (
+                  <ChallengeMessageRow key={item.id} {...item}/>
+                )
             }
-            </View>
+            keyExtractor={item => item.id}
+          />
 
             <TextInput
               placeholder='Challenge Message'
@@ -113,6 +115,71 @@ export default class ChallengeChat extends React.Component {
                  mutation={ADD_CHALLENGE_MESSAGE_MUTATION}
                  variables={{ challengeId: challengeId, challengeMessage:challengeMessage }}
                  onCompleted={data => this._confirm(data)}
+                 refetchQueries={() => {
+                    return [{
+                       query: gql`
+                       query ChallengeQuery($challengeId:ID!){
+                           challenge(id:$challengeId){
+                           id
+                           challenge
+                           challengeMessages{
+                             id
+                             challengeMessage
+                             addedDate
+                             addedBy{
+                               id
+                               firstName
+                               lastName
+                             }
+                           }
+                           answer{
+                             id
+                             answer{
+                               id
+                               choice
+                               correct
+                               question{
+                                 id
+                                 question
+                                 panel{
+                                   id
+                                   link
+                                 }
+                                 addedDate
+                                 addedBy{
+                                   id
+                                   firstName
+                                   lastName
+                                 }
+                                 choices{
+                                   id
+                                   correct
+                                   choice
+                                 }
+                                 test{
+                                   id
+                                   subject
+                                   testNumber
+                                   course{
+                                     id
+                                     name
+                                   }
+                                 }
+                               }
+                             }
+                           }
+                           addedBy{
+                             id
+                             firstName
+                             lastName
+                           }
+                           addedDate
+                           }
+                         }
+                     `,
+                       variables: { challengeId: challengeId }
+                   }];
+                   }}
                  >
                  {mutation => (
                    <ButtonColor

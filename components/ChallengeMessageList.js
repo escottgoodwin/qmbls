@@ -16,12 +16,8 @@ return (
     data={this.props}
     renderItem={
       ({ item, index }) => (
-
-        <View >
-        <Text>{item.challengeMessage}</Text>
-          <Text>{item.addedBy.firstName} {item.addedBy.lastName} {moment(item.addedDate).calendar()}</Text>
-        </View>
-      )
+          <ChallengeMessageRow key={item.id} {...item}/>
+        )
     }
     keyExtractor={item => item.id}
   />
