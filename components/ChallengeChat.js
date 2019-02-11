@@ -14,42 +14,25 @@ import ChallengeMessageList from '../components/ChallengeMessageList'
 import ChallengeMessageRow from '../components/ChallengeMessageRow'
 
 
-const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
-  subscription ChallengeMsgSub($challengeId:ID!){
-    challengeMsg(challengeId:$challengeId){
-      node{
+  const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
+  mutation AddChallengeMessage($challengeId: ID!,
+    $challengeMessage: String!){
+      addChallengeMessage(challengeMessage:$challengeMessage,
+      challengeId:$challengeId){
         id
-        challengeMessage
-        addedDate
         addedBy{
           firstName
           lastName
         }
       }
     }
-  }
   `
 
-  const ADD_CHALLENGE_MESSAGE_MUTATION = gql`
-    mutation AddChallengeMessage($challengeId: ID!,
-      $challengeMessage: String!) {
-        addChallengeMessage(challengeMessage: $challengeMessage,
-          challengeId: $challengeId){
-            id
-            challengeMessage
-            addedDate
-            addedBy{
-              firstName
-              lastName
-              id
-            }
-          }
-      }
-  `
   const CHALLENGE_MESSAGE_QUERY = gql`
   query ChallengeMessages($challengeId:ID!){
-    challengeMessages(where:{challenge:{id:$challengeId}}){
-      challengeMessages{
+     challenge(id:$challengeId){
+       id
+    	challengeMessages{
         id
         challengeMessage
         addedDate
@@ -59,8 +42,25 @@ const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
         }
       }
     }
-  }
+    }
   `
+
+  const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
+    subscription ChallengeMsgSub($challengeId:ID!){
+      challengeMsg(challengeId:$challengeId){
+        node{
+          id
+          challengeMessage
+          addedDate
+          addedBy{
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+    `
 
 export default class ChallengeChat extends React.Component {
 
@@ -74,33 +74,27 @@ export default class ChallengeChat extends React.Component {
       isVisible: false,
       errorMessage:'',
       challengeMessages:[],
-      challengeMessages1:[]
-    }
-
-    componentDidMount(){
-      const { challenge } = this.props
-      this.setState({challengeMessages1:challenge.challengeMessages,count:challenge.challengeMessages.length})
     }
 
   render() {
-    const { challenge } = this.props
-    const challengeId = challenge.id
+    const { challengeId } = this.props
     const { challengeMessage, isVisible, errorMessage } = this.state
 
     return (
       <View style={styles.container}>
-            <>
-            <Text>Messages - {challenge.challengeMessages.length}</Text>
 
-            <FlatList
-            data={challenge.challengeMessages}
-            renderItem={
-              ({ item, index }) => (
-                  <ChallengeMessageRow key={item.id} {...item}/>
-                )
-            }
-            keyExtractor={item => item.id}
-          />
+
+            <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: challengeId }}>
+                  {({ loading, error, data }) => {
+                    if (loading) return <Loading1 />
+                    if (error) return <Text>{JSON.stringify(error)}</Text>
+
+                    const challenge = data.challenge
+
+                return (
+                  <>
+            <ChallengeMessageList {...challenge} />
+
 
             <TextInput
               placeholder='Challenge Message'
@@ -189,13 +183,17 @@ export default class ChallengeChat extends React.Component {
                    />
                  )}
                </Mutation>
-         </>
+               </>
+             )
+             }}
+             </Query>
+
       </View>
       )
     }
   _confirm = (data) => {
-    let challengeMessagesUpdate = [...this.state.challengeMessages1,data.addChallengeMessage]
-    this.setState({challengeMessages1:challengeMessagesUpdate,challengeMessage:'',count:challengeMessagesUpdate.length})
+    const { id } = data
+    this.setState({challengeMessage:''})
   }
 
 }

@@ -10,23 +10,15 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
+
 import ChallengeChat from '../components/ChallengeChat'
+
 
 const CHALLENGE_QUERY = gql`
 query ChallengeQuery($challengeId:ID!){
     challenge(id:$challengeId){
     id
     challenge
-    challengeMessages{
-      id
-      challengeMessage
-      addedDate
-      addedBy{
-        id
-        firstName
-        lastName
-      }
-    }
     answer{
       id
       answer{
@@ -73,22 +65,6 @@ query ChallengeQuery($challengeId:ID!){
   }
 `
 
-const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
-  subscription ChallengeMsgSub($challengeId:ID!){
-    challengeMsg(challengeId:$challengeId){
-      node{
-        id
-        challengeMessage
-        addedDate
-        addedBy{
-          firstName
-          lastName
-        }
-      }
-    }
-  }
-  `
-
 
 export default class Challenge extends React.Component {
 
@@ -113,61 +89,45 @@ export default class Challenge extends React.Component {
       <View style={styles.container}>
       <ScrollView>
 
-        <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }}>
-              {({ loading, error, data }) => {
-                if (loading) return <Loading1 />
-                if (error) return <Text>{JSON.stringify(error)}</Text>
+      <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }}>
+            {({ loading, error, data }) => {
+              if (loading) return <Loading1 />
+              if (error) return <Text>{JSON.stringify(error)}</Text>
 
-                const challenge = data.challenge
+              const challenge = data.challenge
 
-            return (
-              <>
-              <Text style={styles.welcome}>
-              {challenge.answer.answer.question.test.subject} - {challenge.answer.answer.question.test.testNumber}
-              </Text>
+          return (
+            <>
+            <Text style={styles.welcome}>
+            {challenge.answer.answer.question.test.subject} - {challenge.answer.answer.question.test.testNumber}
+            </Text>
 
-              <Text style={styles.choice}>
-                  Correct: {challenge.answer.answer.question.choices.filter(choice => choice.correct)[0].choice}
-              </Text>
+            <Text style={styles.choice}>
+                Correct: {challenge.answer.answer.question.choices.filter(choice => choice.correct)[0].choice}
+            </Text>
 
-              <Text style={styles.choice}>
-                Your Choice: {challenge.answer.answer.choice}
-              </Text>
+            <Text style={styles.choice}>
+              Your Choice: {challenge.answer.answer.choice}
+            </Text>
 
-              <Image key={challenge.answer.answer.question.panel.link} source={{uri: challenge.answer.answer.question.panel.link }} style={styles.logo} />
+            <Image key={challenge.answer.answer.question.panel.link} source={{uri: challenge.answer.answer.question.panel.link }} style={styles.logo} />
 
-              <Text style={styles.choice}>
-                Challenge: {challenge.challenge}
-              </Text>
+            <Text style={styles.choice}>
+              Challenge: {challenge.challenge}
+            </Text>
 
-              <ChallengeChat navigation={this.props.navigation} challengeId={challengeId} challenge={challenge}
-                subscribeToNewChallengeMessage={() =>
-                  subscribeToMore({
-                    document: CHALLENGE_MESSAGE_SUBSCRIPTION,
-                    variables: {challengeId: challengeId },
-                    updateQuery: (prev, { subscriptionData }) => {
-                      if (!subscriptionData.data) return prev
-                      const newChallengeMsg = subscriptionData.data.challengeMsg.node
-                      return  Object.assign({}, prev, {
-                        challenge: {
-                          challengeMessages: [...prev.challenge.challengeMessages,newChallengeMsg],
-                          __typename: prev.challenge.__typename
-                      }
-                      })
-                    }
-                  })
-                }
-              />
+            <ChallengeChat navigation={navigation} challengeId={challengeId} />
 
-         <ButtonColor
-         title="Cancel"
-         backgroundcolor="#282828"
-         onpress={() => navigation.navigate('TestDashboard',{ testId: challenge.question.test.id })}
-         />
-         </>
-       )
-     }}
-     </Query>
+       <ButtonColor
+       title="Cancel"
+       backgroundcolor="#282828"
+       onpress={() => navigation.navigate('TestDashboard',{ testId: challenge.answer.question.test.id })}
+       />
+       </>
+      )
+      }}
+      </Query>
+
 
       </ScrollView>
       </View>

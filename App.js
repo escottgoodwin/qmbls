@@ -52,9 +52,6 @@ const wsLink = new WebSocketLink({
   uri: 'wss://quandria-be.herokuapp.com/',
   options: {
     reconnect: true,
-    connectionParams: {
-        authorization: token1 ? `Bearer ${token1}` : "",
-    },
   }
 });
 

@@ -10,6 +10,7 @@ import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 
 
+
 const ANSWER_QUESTION_QUERY = gql`
   query AnswerQuestionQuery($questionId:ID!){
     question(id:$questionId){
@@ -80,9 +81,9 @@ _onSelect = ( item ) => {
     const {isVisible, errorMessage} = this.state
 
     return (
-      <View styles={styles.container} >
+      <View style={styles.container}>
       <ScrollView >
-      <View styles={styles.container1} >
+
       <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
@@ -94,6 +95,7 @@ _onSelect = ( item ) => {
 
           return (
             <>
+            <View style={styles.header}>
             <Text style={styles.welcome}>
             {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
             </Text>
@@ -101,17 +103,19 @@ _onSelect = ( item ) => {
             <Text style={styles.welcome}>
             {questionToRender.test.subject} - {questionToRender.test.testNumber}
             </Text>
+            </View>
 
             <View style={styles.question}>
-            <Text >
+            <Text style={styles.welcome}>
               {questionToRender.question}
             </Text>
             </View>
 
+
             <View style={styles.choice}>
             <RadioForm
               radio_props={checkboxes}
-              initial={0}
+              initial={-1}
               onPress={(value) => {this.setState({answerChoiceId:value})}}
             />
             </View>
@@ -148,7 +152,6 @@ _onSelect = ( item ) => {
                  )}
                </Mutation>
 
-          </View>
       </ScrollView>
       </View>
     );
@@ -172,14 +175,9 @@ _onSelect = ( item ) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#e4f1fe'
-  },
-  container1: {
-    flex: 1,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#e4f1fe',
   },
   card:{
     height: 320,
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
   choice:{
     width: 300,
     fontSize:18,
-    margin:10,
+    margin:25,
     padding:10,
     color:'#282828',
     backgroundColor:'white'
@@ -198,14 +196,28 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     fontSize:18,
     padding:10,
+    margin:25,
     color:'#282828',
     backgroundColor:'white'
+  },
+  header:{
+    width: 300,
+    fontWeight:'bold',
+    fontSize:18,
+    padding:10,
+    margin:25,
+    color:'#282828'
   },
   messages: {
     padding:5,
     fontSize:16,
     textAlign:'center',
     color:'red'
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
   },
   answer:{
     justifyContent: 'center',
