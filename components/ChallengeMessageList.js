@@ -7,6 +7,10 @@ import ChallengeMessageRow from './ChallengeMessageRow'
 
 export default class ChallengeMessageList extends React.Component {
 
+  componentDidMount() {
+    this.props.subscribeToNewChallengeMessage();
+  }
+
   render() {
 
     return (

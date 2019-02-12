@@ -30,19 +30,19 @@ import ChallengeMessageRow from '../components/ChallengeMessageRow'
 
   const CHALLENGE_MESSAGE_QUERY = gql`
   query ChallengeMessages($challengeId:ID!){
-     challenge(id:$challengeId){
-       id
+     challengeMessages(where:{challenge:{id:$challengeId}}){
     	challengeMessages{
         id
         challengeMessage
         addedDate
         addedBy{
+          id
           firstName
           lastName
         }
       }
     }
-    }
+  }
   `
 
   const CHALLENGE_MESSAGE_SUBSCRIPTION = gql`
@@ -83,18 +83,34 @@ export default class ChallengeChat extends React.Component {
     return (
       <View style={styles.container}>
 
-
             <Query query={CHALLENGE_MESSAGE_QUERY} variables={{ challengeId: challengeId }}>
-                  {({ loading, error, data }) => {
+                  {({ loading, error, data, subscribeToMore }) => {
                     if (loading) return <Loading1 />
                     if (error) return <Text>{JSON.stringify(error)}</Text>
 
-                    const challenge = data.challenge
+                    const challengeMessages = data.challengeMessages
 
                 return (
                   <>
-            <ChallengeMessageList {...challenge} />
+                  <ChallengeMessageList {...challengeMessages}
+                  subscribeToNewChallengeMessage={() =>
+                    subscribeToMore({
+                      document: CHALLENGE_MESSAGE_SUBSCRIPTION,
+                      variables: {challengeId: challengeId },
+                      updateQuery: (prev, { subscriptionData }) => {
+                        if (!subscriptionData.data) return prev
+                        const newChallengeMsg = subscriptionData.data.challengeMsg.node
+                        return  Object.assign({}, prev, {
+                          challengeMessages: {
+                            challengeMessages: [...prev.challengeMessages.challengeMessages, newChallengeMsg],
+                            __typename: prev.challengeMessages.__typename
+                        }
+                        })
+                      }
+                    })
+                  }
 
+                  />
 
             <TextInput
               placeholder='Challenge Message'
