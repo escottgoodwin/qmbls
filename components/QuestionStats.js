@@ -31,7 +31,7 @@ export default class QuestionStats extends React.Component {
 
           return (
 
-      <TouchableOpacity style={{margin:10}} onPress={() => this.props.navigation.navigate('QuestionsCreated',{test_id:this.props.testId})} >
+      <TouchableOpacity style={{margin:10}} onPress={() => this.props.navigation.navigate('UserQs',{testId:this.props.testId})} >
       <Card title='Your Questions' containerStyle={{width: 300}}>
       <Text style={styles.instructions}>Total Questions : {userQuestionStats.totalQuestions} </Text>
       <Text style={styles.instructions}>Total Answers: {userQuestionStats.answers} </Text>

@@ -28,6 +28,8 @@ import AllQuestions from './screens/AllQuestions';
 import QuestionAnswered from './screens/QuestionAnswered'
 import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
+import UserQs from './screens/UserQs'
+import UserAnswers from './screens/UserAnswers'
 
 import Loading from './components/Loading'
 import Error from './screens/Error'
@@ -40,6 +42,19 @@ const getToken = async () => {
   return token
 }
 
+const getWebSocket = async () => {
+  const token = await AsyncStorage.getItem('AUTH_TOKEN')
+  return {
+    uri: 'wss://quandria-be.herokuapp.com/',
+    options: {
+      reconnect: true,
+      connectionParams: {
+        authorization: token ? `Bearer ${token}` : "",
+      }
+    }
+  }
+}
+
 const httpLink = createHttpLink({
   uri: 'https://quandria-be.herokuapp.com/',
   onError: ({ networkError, graphQLErrors }) => {
@@ -49,9 +64,9 @@ const httpLink = createHttpLink({
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'wss://quandria-be.herokuapp.com/',
+  uri: `wss://quandria-be.herokuapp.com/`,
   options: {
-    reconnect: true,
+    reconnect: true
   }
 });
 
@@ -107,10 +122,12 @@ const AppNavigator = createStackNavigator(
     Error:Error,
     CreateQuestionError:CreateQuestionError,
     ChallengeDashboard:ChallengeDashboard,
-    Challenge:Challenge
+    Challenge:Challenge,
+    UserQs:UserQs,
+    UserAnswers:UserAnswers
   },
   {
-    initialRouteName: "Welcome"
+    initialRouteName: "SignIn"
   }
 );
 

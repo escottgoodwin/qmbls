@@ -3,6 +3,7 @@ import { StyleSheet, Platform, Image, Text, View, ScrollView, TouchableOpacity} 
 import { Button, Card } from 'react-native-elements'
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import dateFormat from 'dateformat'
 import Loading1 from '../components/Loading1'
 
 import TestCard from '../components/TestCard'
@@ -59,6 +60,9 @@ export default class TestDashboard extends React.Component {
             <>
           <Text style={styles.welcome}>
             {testToRender.course.name} - {testToRender.testNumber}
+          </Text>
+          <Text style={styles.welcome}>
+            { dateFormat(testToRender.testDate, "dddd, mmmm dS, yyyy") }
           </Text>
 
           <AnsweredStats navigation={this.props.navigation} testId={testId} />

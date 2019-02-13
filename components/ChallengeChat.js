@@ -21,6 +21,7 @@ import ChallengeMessageRow from '../components/ChallengeMessageRow'
       challengeId:$challengeId){
         id
         addedBy{
+          id
           firstName
           lastName
         }
@@ -125,71 +126,6 @@ export default class ChallengeChat extends React.Component {
                  mutation={ADD_CHALLENGE_MESSAGE_MUTATION}
                  variables={{ challengeId: challengeId, challengeMessage:challengeMessage }}
                  onCompleted={data => this._confirm(data)}
-                 refetchQueries={() => {
-                    return [{
-                       query: gql`
-                       query ChallengeQuery($challengeId:ID!){
-                           challenge(id:$challengeId){
-                           id
-                           challenge
-                           challengeMessages{
-                             id
-                             challengeMessage
-                             addedDate
-                             addedBy{
-                               id
-                               firstName
-                               lastName
-                             }
-                           }
-                           answer{
-                             id
-                             answer{
-                               id
-                               choice
-                               correct
-                               question{
-                                 id
-                                 question
-                                 panel{
-                                   id
-                                   link
-                                 }
-                                 addedDate
-                                 addedBy{
-                                   id
-                                   firstName
-                                   lastName
-                                 }
-                                 choices{
-                                   id
-                                   correct
-                                   choice
-                                 }
-                                 test{
-                                   id
-                                   subject
-                                   testNumber
-                                   course{
-                                     id
-                                     name
-                                   }
-                                 }
-                               }
-                             }
-                           }
-                           addedBy{
-                             id
-                             firstName
-                             lastName
-                           }
-                           addedDate
-                           }
-                         }
-                     `,
-                       variables: { challengeId: challengeId }
-                   }];
-                   }}
                  >
                  {mutation => (
                    <ButtonColor
