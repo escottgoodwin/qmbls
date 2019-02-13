@@ -7,6 +7,7 @@ import Loading1 from '../components/Loading1'
 
 import TestList from '../components/TestList'
 import ButtonColor from '../components/ButtonColor'
+import Error from '../components/Error'
 
 const COURSE_QUERY = gql`
 query CourseQuery($courseid:ID!){
@@ -60,7 +61,7 @@ export default class CourseDashboard extends React.Component {
       <Query query={COURSE_QUERY} variables={{ courseid: courseId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>Error</Text>
+              if (error) return <Error {...error}/>
 
               const courseToRender = data.course
               const tests1 = courseToRender.tests.filter(test => !test.deleted)

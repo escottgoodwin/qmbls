@@ -7,6 +7,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import DashboardHeader from '../components/DashboardHeader'
 import Courses from '../components/Courses'
+import Error from '../components/Error'
 
 const COURSE_QUERY = gql`
 query UserQuery($userid: ID!) {
@@ -86,11 +87,11 @@ class TeacherDashboard extends React.Component {
           <Query query={COURSE_QUERY} variables={{ userid: user.id }}>
                 {({ loading, error, data }) => {
                   if (loading) return 'Loading...'
-                  if (error) return 'Error'
+                  if (error) return <Error {...error}/>
 
                   const userToRender = data.user
                   const teacherCourses = new Array(userToRender.teacherCourses.filter(course => !course.deleted))
-                  console.log(userToRender)
+                  
                   return (
 
                     <Courses

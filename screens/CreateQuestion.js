@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
 
 const CREATE_QUESTION_QUERY = gql`
 query CreateQuestionQuery($questionId:ID!){
@@ -116,7 +117,7 @@ export default class CreateQuestion extends React.Component {
       <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const questionToRender = data.question
 

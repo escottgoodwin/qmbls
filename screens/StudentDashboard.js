@@ -8,6 +8,7 @@ import ButtonColor from '../components/ButtonColor'
 import DashboardHeader from '../components/DashboardHeader'
 import Courses from '../components/Courses'
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
 
 const COURSE_QUERY = gql`
 query UserQuery($userid: ID!) {
@@ -102,7 +103,7 @@ class StudentDashboard extends React.Component {
           <Query query={COURSE_QUERY} variables={{ userid: userid }}>
                 {({ loading, error, data }) => {
                   if (loading) return <Loading1 />
-                  if (error) return <Text>Error</Text>
+                  if (error) return <Error {...error}/>
 
                   const userToRender = data.user
                   const fullName = userToRender.firstName + ' ' + userToRender.lastName

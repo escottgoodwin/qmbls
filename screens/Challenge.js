@@ -10,6 +10,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
+import Error from '../components/Error'
 
 import ChallengeChat from '../components/ChallengeChat'
 
@@ -92,7 +93,7 @@ export default class Challenge extends React.Component {
       <Query query={CHALLENGE_QUERY} variables={{ challengeId: challengeId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const challenge = data.challenge
 

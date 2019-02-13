@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
 
 
 
@@ -87,7 +88,7 @@ _onSelect = ( item ) => {
       <Query query={ANSWER_QUESTION_QUERY} variables={{ questionId: questionId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const questionToRender = data.question
               const checkboxes = questionToRender.choices.map(choice => ({'value':choice.id, 'label':choice.choice}))

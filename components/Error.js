@@ -7,8 +7,14 @@ import { View, Text, StyleSheet } from 'react-native'
       <Text>
       Something has gone wrong!
       </Text>
-      {
+      {props.graphQLErrors &&
         props.graphQLErrors.map(message =>
+        <Text>{message}</Text>
+      )
+      }
+
+      {props.networkErrors &&
+        props.networkErrors.map(message =>
         <Text>{message}</Text>
       )
       }

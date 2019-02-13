@@ -10,6 +10,7 @@ import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
 
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
 
 const TEST_QUESTIONS_QUERY = gql`
 query UserAnswers($testId:ID!){
@@ -68,7 +69,7 @@ answerRandom = (questions) =>  {
       <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const answersToRender = data.userAnswers
 

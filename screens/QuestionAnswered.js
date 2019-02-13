@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import AnsweredChoice from '../components/AnsweredChoice'
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
 import QAList from '../components/QAList'
 
 
@@ -65,7 +66,7 @@ export default class QuestionAnswered extends React.Component {
       <Query query={ANSWERED_QUESTION_QUERY} variables={{ answerId: answerId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const answerToRender = data.answer
 

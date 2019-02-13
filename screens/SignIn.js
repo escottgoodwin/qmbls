@@ -59,8 +59,6 @@ export default class SignIn extends React.Component {
        isVisible:false
      }
 
-
-
   render() {
 
     const { email, password, errorMessage, isVisible } = this.state

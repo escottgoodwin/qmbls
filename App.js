@@ -15,7 +15,6 @@ import { AsyncStorage } from "react-native"
 import Welcome from './screens/Welcome';
 import SignIn from './screens/SignIn';
 import SignOut from './screens/SignOut';
-import NotAuthorized from './screens/NotAuthorized';
 import TeacherDashboard from './screens/TeacherDashboard';
 import StudentDashboard from './screens/StudentDashboard';
 import CourseDashboard from './screens/CourseDashboard';
@@ -30,10 +29,6 @@ import ChallengeDashboard from './screens/ChallengeDashboard'
 import Challenge from './screens/Challenge'
 import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
-
-import Loading from './components/Loading'
-import Error from './screens/Error'
-import CreateQuestionError from './screens/CreateQuestionError'
 
 
 const token1 = 'asdf'
@@ -104,8 +99,6 @@ const AppNavigator = createStackNavigator(
     Welcome: Welcome,
     SignIn: SignIn,
     SignOut: SignOut,
-    NotAuthorized: NotAuthorized,
-    Loading:  Loading,
     TeacherDashboard: TeacherDashboard,
     StudentDashboard: StudentDashboard,
     CourseDashboard: CourseDashboard,
@@ -119,8 +112,6 @@ const AppNavigator = createStackNavigator(
     AnswerQuestion: AnswerQuestion,
     QuestionAnswered: QuestionAnswered,
     AllQuestions:AllQuestions,
-    Error:Error,
-    CreateQuestionError:CreateQuestionError,
     ChallengeDashboard:ChallengeDashboard,
     Challenge:Challenge,
     UserQs:UserQs,

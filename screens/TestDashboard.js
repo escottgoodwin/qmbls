@@ -88,8 +88,6 @@ export default class TestDashboard extends React.Component {
       }}
     </Query>
 
-
-
       </ScrollView>
       </View>
     );
@@ -99,11 +97,9 @@ export default class TestDashboard extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
-    minHeight:800
   },
   welcome: {
     fontSize: 20,

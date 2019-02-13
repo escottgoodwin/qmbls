@@ -4,6 +4,7 @@ import { Button, Card } from 'react-native-elements'
 
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
+import Error from '../components/Error'
 
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
@@ -55,7 +56,7 @@ answerRandom = (questions) =>  {
       <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const testToRender = data.test
 
