@@ -9,6 +9,7 @@ import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 import Loading1 from '../components/Loading1'
 import Error from '../components/Error'
+import TestHeader from '../components/TestHeader'
 
 const CREATE_QUESTION_QUERY = gql`
 query CreateQuestionQuery($questionId:ID!){
@@ -96,7 +97,7 @@ export default class CreateQuestion extends React.Component {
   render(){
     const { navigation } = this.props
 
-    const questionId = 'cjrr295lj00380859es8ey4eh'
+    const questionId1 = 'cjru9sva0007u0826swkes27t'
 
     const {
     question,
@@ -113,8 +114,9 @@ export default class CreateQuestion extends React.Component {
     } = this.state
 
     return(
-      <ScrollView contentContainerStyle={styles.container}>
-      <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId }}>
+      <View style={styles.container}>
+      <ScrollView >
+      <Query query={CREATE_QUESTION_QUERY} variables={{ questionId: questionId1 }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
               if (error) return <Error {...error}/>
@@ -123,20 +125,13 @@ export default class CreateQuestion extends React.Component {
 
           return (
             <>
-            <Text style={styles.welcome}>
-            {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
-            </Text>
+            <TestHeader testId={questionToRender.test.id}/>
 
             <Text style={styles.welcome}>
-            {questionToRender.test.subject} - {questionToRender.test.testNumber}
+              {this.state.question}
             </Text>
 
-            <Text style={styles.welcome}>
-            {this.state.question}
-            </Text>
-
-            <Image key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
-
+            <Image style={{margin:5,width: 350}} key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
 
             <TextInput
               placeholder='Question'
@@ -226,6 +221,7 @@ export default class CreateQuestion extends React.Component {
          }}
          </Query>
       </ScrollView>
+      </View>
     )
   }
 
@@ -253,7 +249,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
-    minHeight:800
   },
   welcome: {
     fontSize: 20,

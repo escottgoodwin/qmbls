@@ -6,7 +6,7 @@ import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import TestHeader from '../components/TestHeader'
 import UserQuestionItem from '../components/UserQuestionItem'
-import Loading1 from '../components/Loading1'
+import QuestionsLoader from '../components/QuestionsLoader'
 import Error from '../components/Error'
 
 import { Query, Mutation } from "react-apollo";
@@ -70,7 +70,7 @@ answerRandom = (questions) =>  {
 
       <Query query={TEST_QUESTIONS_QUERY} variables={{ testId: testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <Loading1 />
+              if (loading) return <QuestionsLoader />
               if (error) return <Error {...error}/>
 
               const userQuestions = data.userQuestions

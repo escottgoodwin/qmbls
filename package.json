@@ -8,8 +8,13 @@
     "ios": "expo start --ios",
     "eject": "expo eject"
   },
+  "splash": {
+    "image": "./assets/quandria_welcome.png",
+    "backgroundColor": "#21385b"
+  },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "add": "^2.0.6",
     "apollo-boost": "^0.1.27",
     "apollo-client": "^2.4.12",
     "apollo-link": "^1.2.6",
@@ -25,6 +30,7 @@
     "moment": "^2.24.0",
     "react": "16.5.0",
     "react-apollo": "^2.4.0",
+    "react-content-loader": "^4.0.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
     "react-native-radio-buttons-group": "^1.0.7",
@@ -33,8 +39,10 @@
     "react-native-svg-animated-linear-gradient": "^0.1.9",
     "react-native-vector-icons": "^6.2.0",
     "react-navigation": "^3.0.9",
+    "rn-content-loader": "^0.0.2",
     "rn-placeholder": "^1.3.3",
-    "subscriptions-transport-ws": "^0.9.15"
+    "subscriptions-transport-ws": "^0.9.15",
+    "yarn": "^1.13.0"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"

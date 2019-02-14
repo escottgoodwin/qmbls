@@ -31,6 +31,11 @@ import UserQs from './screens/UserQs'
 import UserAnswers from './screens/UserAnswers'
 
 
+import QuestionsLoader from './components/QuestionsLoader'
+
+
+
+
 const token1 = 'asdf'
 const getToken = async () => {
   const token = await AsyncStorage.getItem('AUTH_TOKEN')
@@ -115,7 +120,8 @@ const AppNavigator = createStackNavigator(
     ChallengeDashboard:ChallengeDashboard,
     Challenge:Challenge,
     UserQs:UserQs,
-    UserAnswers:UserAnswers
+    UserAnswers:UserAnswers,
+    QuestionsLoader:QuestionsLoader
   },
   {
     initialRouteName: "SignIn"

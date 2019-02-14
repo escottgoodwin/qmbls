@@ -8,6 +8,7 @@ import Loading1 from '../components/Loading1'
 import TestList from '../components/TestList'
 import ButtonColor from '../components/ButtonColor'
 import Error from '../components/Error'
+import CourseLoader from '../components/CourseLoader'
 
 const COURSE_QUERY = gql`
 query CourseQuery($courseid:ID!){
@@ -60,7 +61,7 @@ export default class CourseDashboard extends React.Component {
       <ScrollView contentContainerStyle={styles.container}>
       <Query query={COURSE_QUERY} variables={{ courseid: courseId }}>
             {({ loading, error, data }) => {
-              if (loading) return <Loading1 />
+              if (loading) return <CourseLoader />
               if (error) return <Error {...error}/>
 
               const courseToRender = data.course
@@ -69,7 +70,7 @@ export default class CourseDashboard extends React.Component {
           return (
           <>
           <Text style={styles.welcome}>
-            {courseToRender.name} Tests
+            {courseToRender.name} - {courseToRender.courseNumber}
           </Text>
 
           <TestList tests={tests1} coursename={courseToRender.name}  navigation={this.props.navigation} />

@@ -6,6 +6,8 @@ import gql from "graphql-tag";
 const moment = require('moment')
 
 import Loading1 from '../components/Loading1'
+import Error from '../components/Error'
+
 
 const TEST_HEADER_QUERY = gql`
 query TestHeaderQuery($testId:ID!){
@@ -33,7 +35,7 @@ export default class TestHeader extends React.Component {
       <Query query={TEST_HEADER_QUERY} variables={{ testId: this.props.testId }}>
             {({ loading, error, data }) => {
               if (loading) return <Loading1 />
-              if (error) return <Text>{JSON.stringify(error)}</Text>
+              if (error) return <Error {...error}/>
 
               const testToRender = data.test
 

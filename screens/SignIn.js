@@ -101,6 +101,12 @@ export default class SignIn extends React.Component {
       autoCapitalize='none'
       />
 
+      <ButtonColor
+      title="Loading"
+      backgroundcolor="#003366"
+      onpress={() => this.props.navigation.navigate("QuestionsLoader")}
+      />
+
       <Mutation
           mutation={LOGIN_MUTATION}
           variables={{ email:email, password:password }}

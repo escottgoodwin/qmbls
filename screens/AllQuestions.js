@@ -21,6 +21,7 @@ query TestQuestionsQuery($testId:ID!){
     course{
       id
       name
+      courseNumber
     }
     questions{
       id
@@ -44,7 +45,9 @@ export default class AllQuestions extends React.Component {
   }
 
 answerRandom = (questions) =>  {
-    this.props.navigation.navigate("AnswerQuestion")
+  const randomInt = Math.floor(Math.random() * questions.length)
+  const randomId = questions[randomInt].id
+  this.props.navigation.navigate("AnswerQuestion",{questionId: randomId })
   }
 
   render() {
@@ -76,6 +79,8 @@ answerRandom = (questions) =>  {
           backgroundcolor="#003366"
           onpress={() => this.answerRandom(testToRender.questions)}
           />
+
+          <Text>{this.state.randomQ} </Text>
 
           <FlatList
           data={testToRender.questions}

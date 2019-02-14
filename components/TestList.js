@@ -26,13 +26,6 @@ const styles = StyleSheet.create({
   card:{
     width: Dimensions.get('window').width * .8
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    height:600
-  },
   instructions: {
     textAlign: 'center',
     color: '#333333',

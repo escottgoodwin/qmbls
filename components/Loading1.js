@@ -1,35 +1,30 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import Placeholder from 'rn-placeholder';
+import { View,StyleSheet,Text } from 'react-native'
+import ContentLoader from 'rn-content-loader';
+import { Constants, Svg } from 'expo';
 
-export default class Loading1 extends React.Component {
+const Loading1 = () => (
 
-  state = {
-    isReady:false
-  }
-
-  render() {
-    return (
       <View style={styles.container}>
-      <Placeholder.ImageContent
-          size={60}
-          animate="fade"
-          lineNumber={4}
-          lineSpacing={5}
-          lastLineWidth="30%"
-          onReady={this.state.isReady}
-        >
-          <Text></Text>
-        </Placeholder.ImageContent>
+      <ContentLoader height={300}>
+
+  <Svg.Rect x="75" y="13" rx="4" ry="4" width="100" height="13" />
+  <Svg.Rect x="75" y="37" rx="4" ry="4" width="50" height="8" />
+  <Svg.Rect x="0" y="70" rx="5" ry="5" width="400" height="200" />
+</ContentLoader>
       </View>
+
     )
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#e4f1fe',
+    padding:25,
+
   }
 })
+
+export default Loading1

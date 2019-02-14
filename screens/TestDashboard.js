@@ -4,8 +4,8 @@ import { Button, Card } from 'react-native-elements'
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import dateFormat from 'dateformat'
-import Loading1 from '../components/Loading1'
 
+import TestLoader from '../components/TestLoader'
 import TestCard from '../components/TestCard'
 import ButtonColor from '../components/ButtonColor'
 import AnsweredStats from '../components/AnsweredStats'
@@ -51,7 +51,7 @@ export default class TestDashboard extends React.Component {
       <ScrollView>
       <Query query={TEST_QUERY} variables={{ test_id: testId }}>
             {({ loading, error, data }) => {
-              if (loading) return <Loading1 />
+              if (loading) return <TestLoader  />
               if (error) return <Text>Error</Text>
 
               const testToRender = data.test
