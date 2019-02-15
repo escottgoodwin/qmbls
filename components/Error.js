@@ -4,17 +4,19 @@ import { View, Text, StyleSheet } from 'react-native'
  const Error = (props) =>
 
       <View style={styles.container}>
-      
+
       <Text style={{fontSize:16}}>
       Something has gone wrong!
       </Text>
 
       <View style={{padding:15}}>
-      {props.graphQLErrors.map(error => <Text key={error.message} style={{color:'red',fontSize:16}}>{error.message}</Text>)}
+      {props.graphQLErrors !== "undefined" &&
+        props.graphQLErrors.map(error => <Text key={error.message} style={{color:'red',fontSize:16}}>{error.message}</Text>)}
       </View>
 
       <View style={{padding:15}}>
-      {props.networkError.result.errors.map(error => <Text key={error.message} style={{color:'red',fontSize:16}}>{error.message}</Text>)}
+      {props.networkError.result.errors !== "undefined" &&
+        props.networkError.result.errors.map(error => <Text key={error.message} style={{color:'red',fontSize:16}}>{error.message}</Text>)}
       </View>
 
       </View>

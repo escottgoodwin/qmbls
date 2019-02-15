@@ -32,7 +32,7 @@ export default class QuestionStats extends React.Component {
           return (
 
       <TouchableOpacity style={{margin:10}} onPress={() => this.props.navigation.navigate('UserQs',{testId:this.props.testId})} >
-      <Card title='Your Questions' containerStyle={{width: 300}}>
+      <Card title='Your Questions' containerStyle={{width: '90%'}}>
       <Text style={styles.instructions}>Total Questions : {userQuestionStats.totalQuestions} </Text>
       <Text style={styles.instructions}>Total Answers: {userQuestionStats.answers} </Text>
 
@@ -51,13 +51,6 @@ export default class QuestionStats extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e4f1fe',
-    minHeight:800
-  },
   welcome: {
     fontSize: 20,
     textAlign: 'center',

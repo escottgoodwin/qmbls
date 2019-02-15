@@ -12,6 +12,8 @@ import Loading1 from '../components/Loading1'
 import QAList from '../components/QAList'
 import ChallengeList from '../components/ChallengeList'
 import Error from '../components/Error'
+import TestHeader from '../components/TestHeader'
+
 
 const CHALLENGE_ANSWER_QUERY = gql`
 query ChallengeAnswerQuery($questionId:ID!){
@@ -100,13 +102,7 @@ export default class ChallengeDashboard extends React.Component {
 
             return (
               <>
-              <Text style={styles.welcome}>
-              {questionToRender.question.test.course.name} - {questionToRender.question.test.course.institution.name}
-              </Text>
-
-              <Text style={styles.welcome}>
-                {questionToRender.question.test.subject} - {questionToRender.question.test.testNumber}
-              </Text>
+              <TestHeader testId={questionToRender.question.test.id}/>
 
               <Text style={styles.choice}>
                 {questionToRender.question.question}
@@ -205,12 +201,12 @@ const styles = StyleSheet.create({
   },
   choice:{
     flexDirection:"row",
-    minHeight: 50,
-    alignItems: 'center',
+    borderRadius: 5,
     backgroundColor:'white',
-    width: 300,
+    minWidth: "85%",
     padding:10,
-    margin:10
+    margin:15,
+    fontSize:16
   },
   question:{
     fontSize: 20,
@@ -221,19 +217,20 @@ const styles = StyleSheet.create({
     padding:10,
     margin:10
   },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
   logo: {
-    height: 200,
-    marginBottom: 16,
-    marginTop: 32,
-    width: 320,
+    margin:15
   },
   input:{
     height: 40,
-    width: 300,
     backgroundColor:'white',
     borderRadius: 5,
     borderColor: 'darkgrey',
-    margin:5,
+    margin:15,
     padding:10
   }
 });

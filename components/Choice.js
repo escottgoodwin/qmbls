@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   input:{
     height: 40,
-    width: Dimensions.get('window').width * .75,
+    width: "75%",
     backgroundColor:'white',
     borderRadius: 10,
     margin:5,

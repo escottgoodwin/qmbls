@@ -74,6 +74,7 @@ export default class CourseDashboard extends React.Component {
           </Text>
 
           <TestList tests={tests1} coursename={courseToRender.name}  navigation={this.props.navigation} />
+
           <ButtonColor
           title="Dashboard"
           backgroundcolor="#003366"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import { StyleSheet, Platform, FlatList, Image, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import { Button, Card, Icon } from 'react-native-elements'
 
 import { Query, Mutation } from "react-apollo";
@@ -10,6 +10,7 @@ import AnsweredChoice from '../components/AnsweredChoice'
 import Loading1 from '../components/Loading1'
 import Error from '../components/Error'
 import QAList from '../components/QAList'
+import TestHeader from '../components/TestHeader'
 
 
 const ANSWERED_QUESTION_QUERY = gql`
@@ -72,14 +73,7 @@ export default class QuestionAnswered extends React.Component {
 
           return (
             <>
-            <Text style={styles.welcome}>
-            {answerToRender.question.test.course.name} - {answerToRender.question.test.course.institution.name}
-            </Text>
-
-            <Text style={styles.welcome}>
-            {answerToRender.question.test.subject} - {answerToRender.question.test.testNumber}
-            </Text>
-
+            <TestHeader testId={answerToRender.question.test.id}/>
 
             {answerToRender.answer.correct ?
               <>
@@ -119,13 +113,15 @@ export default class QuestionAnswered extends React.Component {
               {answerToRender.question.question}
             </Text>
 
-            {
-              answerToRender.question.choices.map(choice =>
-
-                <AnsweredChoice key={choice.id} {...choice} />
-
-            )
-          }
+            <FlatList
+            data={answerToRender.question.choices}
+            renderItem={
+              ({ item, index }) => (
+                <AnsweredChoice key={item.id} {...item} />
+              )
+            }
+            keyExtractor={item => item.id}
+          />
 
            <ButtonColor
            title="Challenge Answer"
@@ -158,21 +154,20 @@ const styles = StyleSheet.create({
   },
   choice:{
     flexDirection:"row",
-    minHeight: 50,
     alignItems: 'center',
     backgroundColor:'white',
-    width: 300,
     padding:10,
-    margin:10
+    margin:15,
+    borderRadius:5,
+    minWidth:'85%'
   },
   question:{
     fontSize: 20,
-    minHeight: 50,
-    alignItems: 'center',
     backgroundColor:'white',
-    width: 300,
     padding:10,
-    margin:10
+    margin:10,
+    borderRadius:5,
+    minWidth:'85%'
   },
   logo: {
     height: 120,

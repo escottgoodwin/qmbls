@@ -43,11 +43,15 @@ export default class ChallengeList extends React.Component {
             data={challengesToRender}
             renderItem={
               ({ item, index }) => (
+
                 <TouchableOpacity style={styles.choice}
                  onPress={() => navigation.navigate('Challenge',{ challengeId: item.id })}
                  >
+                 <View style={{fontSize:14,margin:10,borderBottomColor: 'darkgray',
+                 borderBottomWidth: 2}}>
                  <Text style={{fontSize:14,marginBottom:3}}>{item.challenge} </Text>
                  <Text style={{fontSize:11,color:'darkgray'}}>{item.addedBy.firstName} {item.addedBy.lastName} {moment(item.addedDate).calendar()}</Text>
+                 </View>
                  </TouchableOpacity>
 
               )

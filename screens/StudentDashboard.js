@@ -63,13 +63,7 @@ var LOGOUT_MUTATION = gql`
         }
       }
     }
-  `;
-
-  const getUserId = async () => {
-    const userid = AsyncStorage.getItem('USERID')
-    .then(userid => this.setState({userid}))
-    return userid
-  }
+  `
 
   const removeToken = async () => {
     await AsyncStorage.removeItem('USERID')
@@ -80,9 +74,8 @@ class StudentDashboard extends React.Component {
 
     state = {
       userid: '',
+      nofitication:{}
     };
-
-
 
   static navigationOptions = {
     title: 'Student Dashboard',
@@ -98,7 +91,8 @@ class StudentDashboard extends React.Component {
  render() {
    const userid = this.state.userid
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
+      <ScrollView>
 
           <Query query={COURSE_QUERY} variables={{ userid: userid }}>
                 {({ loading, error, data }) => {
@@ -142,12 +136,12 @@ class StudentDashboard extends React.Component {
             </Query>
 
       </ScrollView>
+      </View>
     );
 
   }
  _confirm = (data) => {
     const { user, authMsg } = data.logout
-    console.log(authMsg)
     removeToken()
     this.props.navigation.navigate('SignOut',{ authMsg: authMsg })
     }

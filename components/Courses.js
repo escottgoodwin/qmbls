@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     color:'#282828'
   },
   touch: {
-    width: 300,
-    margin:5,
+
+    margin:10,
     backgroundColor:"white",
     borderColor:"#e4fef1",
     borderRadius:5,

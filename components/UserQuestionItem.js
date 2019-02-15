@@ -49,19 +49,18 @@ const UserQuestionItem = (props) =>
       backgroundColor: '#e4f1fe',
     },
     choice:{
-      minHeight: 50,
       backgroundColor:'white',
-      width: 300,
       padding:10,
-      margin:10
+      margin:10,
+      borderRadius:5
     },
     correct:{
-      fontSize:12,
+      fontSize:14,
       color:'green',
       margin:10,
     },
     incorrect:{
-      fontSize:12,
+      fontSize:14,
       margin:10,
     },
     logo: {

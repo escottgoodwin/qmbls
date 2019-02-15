@@ -131,8 +131,8 @@ export default class CreateQuestion extends React.Component {
               {this.state.question}
             </Text>
 
-            <Image style={{margin:5,width: 350}} key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
-
+            <Image style={{margin:10,width:'90%'}} key={questionToRender.sentPanel.link} source={{uri: questionToRender.sentPanel.link }} style={styles.logo} />
+            <View style={{margin:10}}>
             <TextInput
               placeholder='Question'
               style={styles.question}
@@ -141,6 +141,7 @@ export default class CreateQuestion extends React.Component {
               numberOfLines={4}
               value={this.state.question}
              />
+             </View>
 
              <Choice
              changetext={(text) => this.setState({choice1:text})}
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
   },
   question:{
     height: 80,
-    width: 350,
+    width: 300,
     backgroundColor:'white',
     borderRadius: 10,
     margin:5,

@@ -9,6 +9,7 @@ import ButtonColor from '../components/ButtonColor'
 import Choice from '../components/Choice'
 import Loading1 from '../components/Loading1'
 import Error from '../components/Error'
+import TestHeader from '../components/TestHeader'
 
 const ANSWERED_QUESTION_QUERY = gql`
 query AnswerQuery($answerId:ID!){
@@ -87,13 +88,8 @@ export default class CreateQuestion extends React.Component {
 
           return (
             <>
-            <Text style={styles.welcome}>
-            {answerToRender.question.test.course.name} - {answerToRender.question.test.course.institution.name}
-            </Text>
 
-            <Text style={styles.welcome}>
-            {answerToRender.question.test.subject} - {answerToRender.question.test.testNumber}
-            </Text>
+            <TestHeader testId={answerToRender.question.test.id}/>
 
             <TextInput
               placeholder='Challenge'

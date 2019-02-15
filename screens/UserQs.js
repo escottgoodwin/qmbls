@@ -92,13 +92,13 @@ answerRandom = (questions) =>  {
 
               return (
           <>
-          <View style={{flex:1,flexDirection:'row',width: 300,justifyContent:'space-between',margin:10,padding:10,backgroundColor:'white'}}>
+          <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',borderRadius:5,margin:10,padding:10,backgroundColor:'white'}}>
 
           <Text style={styles.instructions}>Questions : {userQuestionStats.totalQuestions} </Text>
           <Text style={styles.instructions}>Answers: {userQuestionStats.answers} </Text>
           </View >
 
-          <View style={{flex:1,flexDirection:'row',width: 300,justifyContent:'space-between',margin:10,padding:10,backgroundColor:'white'}}>
+          <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',borderRadius:5,margin:10,padding:10,backgroundColor:'white'}}>
           <Text style={styles.instructions}>Correct: {userQuestionStats.totalCorrect} </Text>
           <Text style={styles.instructions}>Percent: {userQuestionStats.percentCorrect.toFixed(2)*100}% </Text>
 
@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     width: 300,
     padding:10,
-    margin:10
+    margin:10,
+    borderRadius:5
   },
   logo: {
     height: 120,
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-    fontSize:18
+    fontSize:18,
+    borderRadius:5
   },
 });

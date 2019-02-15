@@ -90,7 +90,7 @@ answerRandom = (questions) =>  {
 
               return (
 
-          <View style={{flex:1,flexDirection:'row',width: 300,justifyContent:'space-between',margin:10,padding:10,backgroundColor:'white'}}>
+          <View style={{flex:1,flexDirection:'row',justifyContent:'space-between',margin:10,padding:10,borderRadius:5,backgroundColor:'white'}}>
           <Text style={styles.instructions}>Total: {userAnsweredStats.total} </Text>
           <Text style={styles.instructions}>Correct: {userAnsweredStats.totalCorrect} </Text>
           <Text style={styles.instructions}>{userAnsweredStats.percentCorrect.toFixed(2)*100}% </Text>
@@ -141,11 +141,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#e4f1fe',
   },
   choice:{
-    minHeight: 50,
     backgroundColor:'white',
-    width: 300,
     padding:10,
-    margin:10
+    margin:10,
+    borderRadius:5
   },
   correct:{
     fontSize:14,
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
-    fontSize:18
+    fontSize:18,
+    borderRadius:5
   },
 });

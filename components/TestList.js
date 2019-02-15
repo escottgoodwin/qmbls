@@ -23,9 +23,6 @@ keyExtractor={item => item.id}
 />
 
 const styles = StyleSheet.create({
-  card:{
-    width: Dimensions.get('window').width * .8
-  },
   instructions: {
     textAlign: 'center',
     color: '#333333',

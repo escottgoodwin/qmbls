@@ -10,6 +10,7 @@ import TestCard from '../components/TestCard'
 import ButtonColor from '../components/ButtonColor'
 import AnsweredStats from '../components/AnsweredStats'
 import QuestionStats from '../components/QuestionStats'
+import TestHeader from '../components/TestHeader'
 
 const TEST_QUERY = gql`
 query TestQuery($test_id:ID!){
@@ -58,17 +59,15 @@ export default class TestDashboard extends React.Component {
 
           return (
             <>
-          <Text style={styles.welcome}>
-            {testToRender.course.name} - {testToRender.testNumber}
-          </Text>
+          <TestHeader testId={testId}/>
           <Text style={styles.welcome}>
             { dateFormat(testToRender.testDate, "dddd, mmmm dS, yyyy") }
           </Text>
-
+          <ScrollView>
           <AnsweredStats navigation={this.props.navigation} testId={testId} />
 
           <QuestionStats navigation={this.props.navigation} testId={testId} />
-
+          </ScrollView>
 
             <ButtonColor
             title="All Questions"

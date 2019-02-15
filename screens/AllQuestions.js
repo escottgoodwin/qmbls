@@ -5,6 +5,7 @@ import { Button, Card } from 'react-native-elements'
 import ButtonColor from '../components/ButtonColor'
 import QAList from '../components/QAList'
 import Error from '../components/Error'
+import TestHeader from '../components/TestHeader'
 
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
@@ -66,13 +67,7 @@ answerRandom = (questions) =>  {
           return (
         <View style={styles.container}>
         <ScrollView >
-          <Text style={styles.welcome}>
-            {testToRender.course.name} - {testToRender.course.courseNumber}
-          </Text>
-
-          <Text style={styles.welcome}>
-            {testToRender.subject} - {testToRender.testNumber}
-          </Text>
+          <TestHeader testId={testId}/>
 
           <ButtonColor
           title="Answer Random Question"
@@ -88,7 +83,7 @@ answerRandom = (questions) =>  {
             ({ item, index }) => (
               <TouchableOpacity style={styles.choice}
               onPress={() => this.props.navigation.navigate('AnswerQuestion',{questionId:item.id })}>
-               <Text style={{fontSize:14,marginBottom:3}} >
+               <Text style={{fontSize:16,marginBottom:3}} >
                {item.question}
                </Text>
 
@@ -121,11 +116,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#e4f1fe',
   },
   choice:{
-    minHeight: 50,
     backgroundColor:'white',
-    width: 300,
     padding:10,
-    margin:10
+    margin:10,
+    borderRadius:5
   },
   logo: {
     height: 120,

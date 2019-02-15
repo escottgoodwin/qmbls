@@ -29,12 +29,12 @@ const AnsweredChoice = (props) =>
 const styles = StyleSheet.create({
   choice:{
     flexDirection:"row",
-    minHeight: 50,
     alignItems: 'center',
     backgroundColor:'white',
-    width: 300,
     padding:10,
-    margin:3
+    margin:10,
+    borderRadius: 5,
+    minWidth:'85%'
   },
   choicetext:{
     fontWeight:'bold',

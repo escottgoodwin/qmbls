@@ -9,7 +9,7 @@ import gql from "graphql-tag";
 import ButtonColor from '../components/ButtonColor'
 import Loading1 from '../components/Loading1'
 import Error from '../components/Error'
-
+import TestHeader from '../components/TestHeader'
 
 
 const ANSWER_QUESTION_QUERY = gql`
@@ -96,15 +96,7 @@ _onSelect = ( item ) => {
 
           return (
             <>
-            <View style={styles.header}>
-            <Text style={styles.welcome}>
-            {questionToRender.test.course.name} - {questionToRender.test.course.institution.name}
-            </Text>
-
-            <Text style={styles.welcome}>
-            {questionToRender.test.subject} - {questionToRender.test.testNumber}
-            </Text>
-            </View>
+            <TestHeader testId={questionToRender.test.id}/>
 
             <View style={styles.question}>
             <Text style={styles.welcome}>
@@ -180,24 +172,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#e4f1fe',
   },
-  card:{
-    height: 320,
-    width: Dimensions.get('window').width * .8
-  },
   choice:{
-    width: 300,
     fontSize:18,
-    margin:25,
+    margin:15,
     padding:10,
     color:'#282828',
-    backgroundColor:'white'
+    backgroundColor:'white',
+    borderRadius:5
   },
   question:{
-    width: 300,
+    borderRadius:5,
     fontWeight:'bold',
     fontSize:18,
     padding:10,
-    margin:25,
+    margin:15,
     color:'#282828',
     backgroundColor:'white'
   },
